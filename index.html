@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#1a1c20">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Kalkulator Koefisien Belt Scale</title>
+<title>Belt Scale · Span Coefficient Calculator</title>
 
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -123,12 +123,12 @@
   }
   .sub {
     text-align: center; font-size: 10px; color: #767d88;
-    letter-spacing: 1.8px; text-transform: uppercase; margin-bottom: 18px;
+    letter-spacing: 1.8px; text-transform: uppercase; margin-bottom: 20px;
   }
 
   .top-meta-grid {
     display: grid;
-    grid-template-columns: 1.45fr 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 10px;
     margin-bottom: 12px;
   }
@@ -140,7 +140,6 @@
     padding: 14px;
     margin-bottom: 12px;
   }
-  .test-block.hidden { display: none; }
 
   .test-head {
     display: flex;
@@ -187,16 +186,32 @@
   .grid-2 .full { grid-column: 1 / -1; }
 
   label {
-    display: block; font-size: 9.5px; font-weight: 500;
-    color: #8b93a1; letter-spacing: .8px; text-transform: uppercase;
-    margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    display: block;
+    font-size: 9.5px;
+    font-weight: 500;
+    color: #8b93a1;
+    letter-spacing: .5px;
+    padding-left: .5px;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   input {
-    width: 100%; padding: 11px 12px; font-size: 15px;
+    width: 100%;
+    padding: 11px 10px;
+    font-size: 15px;
     font-family: "SF Mono", "JetBrains Mono", Consolas, monospace;
-    color: #eceef1; font-weight: 500;
-    background: #202329; border: 1px solid #2b2f36;
-    border-radius: 8px; outline: none; transition: border .2s, box-shadow .2s;
+    color: #eceef1;
+    font-weight: 500;
+    text-align: center;
+    background: #202329;
+    border: 1px solid #2b2f36;
+    border-radius: 8px;
+    outline: none;
+    transition: border .2s, box-shadow .2s;
   }
   input.top-input {
     background: #17191d;
@@ -247,7 +262,6 @@
     color: #b8a888;
     background: rgba(184,168,136,.04);
   }
-  .add-test-btn.hidden { display: none; }
 
   .action-group {
     display: flex;
@@ -307,11 +321,12 @@
     gap: 6px;
     padding-bottom: 8px;
     border-bottom: 1px dashed #262a30;
+    text-align: center;
   }
   .test-res-cell .k {
     font-size: 9px;
     text-transform: uppercase;
-    letter-spacing: .7px;
+    letter-spacing: .6px;
     color: #767d88;
     margin-bottom: 2px;
   }
@@ -347,7 +362,32 @@
   }
   .divider { height: 1px; background: #262a30; margin: 14px 0; }
 
-  .big { text-align: center; padding: 8px 0 14px; }
+  .mode-switch {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    margin-bottom: 14px;
+  }
+  .mode-btn {
+    flex: 1;
+    padding: 7px 10px;
+    font-size: 10.5px;
+    font-weight: 600;
+    border-radius: 7px;
+    border: 1px solid #3a3f47;
+    background: #17191d;
+    color: #8b93a1;
+    cursor: pointer;
+    transition: all .2s;
+    font-family: "SF Mono", Consolas, monospace;
+  }
+  .mode-btn.active {
+    border-color: #b8a888;
+    background: rgba(184,168,136,.12);
+    color: #eceef1;
+  }
+
+  .big { text-align: center; padding: 6px 0 14px; }
   .big .label {
     font-size: 10px; color: #767d88; letter-spacing: 1.8px;
     text-transform: uppercase; margin-bottom: 10px; font-weight: 500;
@@ -355,44 +395,31 @@
   .big .label.ref { color: #9bb094; }
   .big .value {
     font-family: "SF Mono", "JetBrains Mono", Consolas, monospace;
-    font-size: 38px; font-weight: 300; color: #eceef1;
+    font-size: 40px; font-weight: 300; color: #eceef1;
     line-height: 1; letter-spacing: -.5px; word-break: break-all;
   }
-  .big .value.small { font-size: 28px; }
+  .big .value.small { font-size: 30px; }
   .big .value.ref { color: #b2c7ac; }
-  .sub-ref {
-    margin-top: 8px;
-    font-size: 11px;
-    color: #767d88;
-    font-family: "SF Mono", Consolas, monospace;
-  }
 
   .result-actions {
     display: flex;
-    gap: 8px;
     justify-content: center;
-    flex-wrap: wrap;
     margin-top: 14px;
   }
-  .copy-btn {
-    padding: 7px 14px;
+  .jpg-btn {
+    padding: 8px 18px;
     font-size: 10.5px;
     font-weight: 600;
-    letter-spacing: .8px;
+    letter-spacing: .9px;
     text-transform: uppercase;
-    color: #c9cdd3;
+    color: #b8a888;
     background: #17191d;
-    border: 1px solid #3a3f47;
+    border: 1px solid rgba(184,168,136,.5);
     border-radius: 6px;
     cursor: pointer;
     transition: all .2s;
   }
-  .copy-btn:hover { border-color: #b8a888; color: #eceef1; }
-  .copy-btn.jpg-btn {
-    border-color: rgba(184,168,136,.5);
-    color: #b8a888;
-  }
-  .copy-btn.jpg-btn:hover {
+  .jpg-btn:hover {
     background: rgba(184,168,136,.12);
     border-color: #b8a888;
     color: #eceef1;
@@ -405,7 +432,7 @@
     border-radius: 99px;
     font-weight: 600;
     letter-spacing: .3px;
-    margin-top: 12px;
+    margin-top: 14px;
   }
   .badge.ok   { background: rgba(155,176,148,.14); color: #b2c7ac; }
   .badge.warn { background: rgba(212,187,138,.14); color: #d4bb8a; }
@@ -446,117 +473,64 @@
 <body>
 
 <div class="card">
-  <button type="button" class="info-btn" onclick="toggleModal()" aria-label="Instruksi Best Practice" title="Instruksi Best Practice">i</button>
+  <button type="button" class="info-btn" onclick="toggleModal()" aria-label="Best Practice Lapangan" title="Best Practice Lapangan">i</button>
 
-  <h1>Kalkulator Koefisien</h1>
+  <h1>Coefficient Calculator</h1>
   <p class="sub">Belt Scale · Span Correction</p>
 
   <form onsubmit="event.preventDefault(); hitung();">
-    <!-- TAG ID & TOLERANSI -->
+    <!-- TAG ID & TOLERANCE -->
     <div class="top-meta-grid">
       <div>
-        <label for="tagId">Tag ID (Opsional)</label>
+        <label for="tagId">Tag ID (Optional)</label>
         <input type="text" id="tagId" class="top-input tag-text" maxlength="32" oninput="onInputChange()">
       </div>
       <div>
-        <label for="tolInput">Toleransi (±%)</label>
+        <label for="tolInput">Tolerance (±%)</label>
         <input type="number" id="tolInput" class="top-input" value="0.5" step="any" inputmode="decimal" oninput="onInputChange()">
       </div>
     </div>
 
-    <!-- PENGETESAN 1 -->
-    <div class="test-block" id="tes1">
-      <div class="test-head">
-        <span class="test-title">Pengetesan 1</span>
-        <div class="mini-actions">
-          <button type="button" class="mini-btn" onclick="isiDefaultK1()">Init = 1</button>
+    <!-- DYNAMIC TESTS CONTAINER -->
+    <div id="testsContainer">
+      <div class="test-block">
+        <div class="test-head">
+          <span class="test-title">Test 1</span>
+          <div class="mini-actions">
+            <button type="button" class="mini-btn" onclick="isiDefaultK1()">Init = 1</button>
+          </div>
         </div>
+        <div class="grid-2">
+          <div class="full">
+            <label class="lbl-k" for="k1">Old Coef (K1)</label>
+            <input type="number" id="k1" class="inp-k" step="any" inputmode="decimal" oninput="onInputChange()">
+          </div>
+          <div>
+            <label class="lbl-a" for="a1">Actual (kg)</label>
+            <input type="number" id="a1" class="inp-a" step="any" inputmode="decimal" oninput="onInputChange()">
+          </div>
+          <div>
+            <label class="lbl-d" for="d1">Display (kg)</label>
+            <input type="number" id="d1" class="inp-d" step="any" inputmode="decimal" oninput="onInputChange()">
+          </div>
+        </div>
+        <div class="live-diff"></div>
       </div>
-      <div class="grid-2">
-        <div class="full">
-          <label for="k1">Koefisien Lama (K1)</label>
-          <input type="number" id="k1" step="any" inputmode="decimal" oninput="onInputChange()">
-        </div>
-        <div>
-          <label for="a1">Berat Aktual (kg)</label>
-          <input type="number" id="a1" step="any" inputmode="decimal" oninput="onInputChange()">
-        </div>
-        <div>
-          <label for="d1">Berat Display (kg)</label>
-          <input type="number" id="d1" step="any" inputmode="decimal" oninput="onInputChange()">
-        </div>
-      </div>
-      <div class="live-diff" id="live1"></div>
     </div>
 
-    <!-- PENGETESAN 2 (OPSIONAL) -->
-    <div class="test-block hidden" id="tes2">
-      <div class="test-head">
-        <span class="test-title">Pengetesan 2</span>
-        <div class="mini-actions">
-          <button type="button" class="mini-btn" onclick="salinK(2, 'awal')">= K1</button>
-          <button type="button" class="mini-btn" onclick="salinK(2, 'hasil')">Hasil 1</button>
-          <button type="button" class="mini-btn del" onclick="hapusTes(2)" title="Tutup Pengetesan 2">✕</button>
-        </div>
-      </div>
-      <div class="grid-2">
-        <div class="full">
-          <label for="k2">Koefisien Lama (K2)</label>
-          <input type="number" id="k2" step="any" inputmode="decimal" oninput="onInputChange()">
-        </div>
-        <div>
-          <label for="a2">Berat Aktual (kg)</label>
-          <input type="number" id="a2" step="any" inputmode="decimal" oninput="onInputChange()">
-        </div>
-        <div>
-          <label for="d2">Berat Display (kg)</label>
-          <input type="number" id="d2" step="any" inputmode="decimal" oninput="onInputChange()">
-        </div>
-      </div>
-      <div class="live-diff" id="live2"></div>
-    </div>
-
-    <!-- PENGETESAN 3 (OPSIONAL) -->
-    <div class="test-block hidden" id="tes3">
-      <div class="test-head">
-        <span class="test-title">Pengetesan 3</span>
-        <div class="mini-actions">
-          <button type="button" class="mini-btn" onclick="salinK(3, 'awal')">= K1</button>
-          <button type="button" class="mini-btn" onclick="salinK(3, 'hasil')">Hasil 2</button>
-          <button type="button" class="mini-btn del" onclick="hapusTes(3)" title="Tutup Pengetesan 3">✕</button>
-        </div>
-      </div>
-      <div class="grid-2">
-        <div class="full">
-          <label for="k3">Koefisien Lama (K3)</label>
-          <input type="number" id="k3" step="any" inputmode="decimal" oninput="onInputChange()">
-        </div>
-        <div>
-          <label for="a3">Berat Aktual (kg)</label>
-          <input type="number" id="a3" step="any" inputmode="decimal" oninput="onInputChange()">
-        </div>
-        <div>
-          <label for="d3">Berat Display (kg)</label>
-          <input type="number" id="d3" step="any" inputmode="decimal" oninput="onInputChange()">
-        </div>
-      </div>
-      <div class="live-diff" id="live3"></div>
-    </div>
-
-    <button type="button" class="add-test-btn" id="addTestBtn" onclick="tambahTes()">+ Tambah Pengetesan 2</button>
+    <button type="button" class="add-test-btn" id="addTestBtn" onclick="tambahTes()">+ Add Test 2</button>
 
     <div class="action-group">
-      <button type="submit" class="calc-btn">Hitung</button>
-      <button type="button" class="reset-btn" onclick="resetForm()">Hapus</button>
+      <button type="submit" class="calc-btn">Calculate</button>
+      <button type="button" class="reset-btn" onclick="resetForm()">Reset</button>
     </div>
   </form>
 
   <div class="result" id="result"></div>
 
   <p class="note">
-    K<sub>baru</sub> = K<sub>lama</sub> × (Aktual ÷ Display) · Awal = 1,000<br>
-    Selisih = Display − Aktual (kg)<br>
-    Standar pabrik umumnya ±0,5% s.d ±1% (sesuai kebutuhan)
+    New Coef = Old Coef × (Actual ÷ Display) · Init = 1.000<br>
+    Diff = Display − Actual (kg)
   </p>
 </div>
 
@@ -570,8 +544,11 @@
 
 <script>
 const STORAGE_KEY = 'kalkulatorCoefMatData';
-const FIELDS = ['tagId', 'tolInput', 'k1', 'a1', 'd1', 'k2', 'a2', 'd2', 'k3', 'a3', 'd3'];
 let lastReportData = null;
+
+function getTestBlocks() {
+  return Array.from(document.querySelectorAll('#testsContainer .test-block'));
+}
 
 function getTol() {
   const raw = document.getElementById('tolInput').value.trim();
@@ -601,9 +578,9 @@ function updateModalInfo() {
   const wStr = fmtPctClean(warnMax);
 
   document.getElementById('modalList').innerHTML = `
-    <li><b>Deviasi &lt; ${tStr}%</b><br>Jangan diubah. Akurasi masuk target toleransi (±${tStr}%), biarkan sistem stabil.</li>
-    <li><b>Deviasi ${tStr}% – ${wStr}%</b><br>Update ke koefisien baru, lalu <b>wajib verifikasi</b> dengan penimbangan berikutnya.</li>
-    <li><b>Deviasi &gt; ${wStr}%</b><br><b>Langsung ubah</b> koefisien di indikator, lalu lakukan pengetesan ulang.</li>
+    <li><b>Error &lt; ${tStr}%</b><br>Jangan diubah. Akurasi masuk target toleransi (±${tStr}%), biarkan sistem stabil.</li>
+    <li><b>Error ${tStr}% – ${wStr}%</b><br>Update ke New Coef, lalu <b>wajib verifikasi</b> dengan pengetesan berikutnya.</li>
+    <li><b>Error &gt; ${wStr}%</b><br><b>Langsung ubah</b> koefisien di indikator, lalu lakukan pengetesan ulang.</li>
   `;
 }
 
@@ -645,9 +622,9 @@ function getStatus(errPct, tol) {
   const tStr = fmtPctClean(tol);
   const wStr = fmtPctClean(warnMax);
 
-  if (errPct < tol)      return { kls: 'ok',   teks: `Deviasi < ${tStr}% · Pertahankan Koefisien Lama` };
-  if (errPct <= warnMax) return { kls: 'warn', teks: `Deviasi ${tStr}–${wStr}% · Ubah & Verifikasi Ulang` };
-  return { kls: 'err', teks: `Deviasi > ${wStr}% · Wajib Ubah Koefisien` };
+  if (errPct < tol)      return { kls: 'ok',   teks: `Error < ${tStr}% · Pertahankan Old Coef` };
+  if (errPct <= warnMax) return { kls: 'warn', teks: `Error ${tStr}–${wStr}% · Ubah & Verifikasi Ulang` };
+  return { kls: 'err', teks: `Error > ${wStr}% · Wajib Ubah Coef` };
 }
 
 function onInputChange() {
@@ -657,10 +634,10 @@ function onInputChange() {
 
 function updateLivePreview() {
   const tol = getTol() || 0.5;
-  for (let i = 1; i <= 3; i++) {
-    const box = document.getElementById(`live${i}`);
-    const a = parseFloat(document.getElementById(`a${i}`).value);
-    const d = parseFloat(document.getElementById(`d${i}`).value);
+  getTestBlocks().forEach(block => {
+    const box = block.querySelector('.live-diff');
+    const a = parseFloat(block.querySelector('.inp-a').value);
+    const d = parseFloat(block.querySelector('.inp-d').value);
     if (a > 0 && d > 0) {
       const selisih = d - a;
       const errPct = Math.abs(selisih) / a * 100;
@@ -669,80 +646,157 @@ function updateLivePreview() {
       const ket = selisih > 0 ? 'Lebih' : (selisih < 0 ? 'Kurang' : 'Pas');
       box.className = 'live-diff show';
       box.innerHTML = `
-        <span>Selisih: <b class="c-${st.kls}">${tanda}${fmtKg(selisih)} kg</b> (${ket})</span>
+        <span>Diff: <b class="c-${st.kls}">${tanda}${fmtKg(selisih)} kg</b> (${ket})</span>
         <span class="c-${st.kls}">Err ${fmtId(errPct, 2, 2)}%</span>
       `;
     } else {
       box.className = 'live-diff';
       box.innerHTML = '';
     }
-  }
-}
-
-function isiDefaultK1() {
-  document.getElementById('k1').value = '1.000';
-  onInputChange();
+  });
 }
 
 function updateAddBtn() {
-  const t2Hidden = document.getElementById('tes2').classList.contains('hidden');
-  const t3Hidden = document.getElementById('tes3').classList.contains('hidden');
-  const btn = document.getElementById('addTestBtn');
-  if (!t2Hidden && !t3Hidden) {
-    btn.classList.add('hidden');
-  } else {
-    btn.classList.remove('hidden');
-    btn.textContent = t2Hidden ? '+ Tambah Pengetesan 2' : '+ Tambah Pengetesan 3';
-  }
+  const nextNo = getTestBlocks().length + 1;
+  document.getElementById('addTestBtn').textContent = `+ Add Test ${nextNo}`;
 }
 
-function tambahTes() {
-  const t2 = document.getElementById('tes2');
-  const t3 = document.getElementById('tes3');
-  if (t2.classList.contains('hidden')) {
-    t2.classList.remove('hidden');
-    if (!document.getElementById('k2').value) autoIsiKBerikutnya(2);
-  } else if (t3.classList.contains('hidden')) {
-    t3.classList.remove('hidden');
-    if (!document.getElementById('k3').value) autoIsiKBerikutnya(3);
-  }
+function createTestBlock(no, values = { k: '', a: '', d: '' }) {
+  const div = document.createElement('div');
+  div.className = 'test-block';
+  div.innerHTML = `
+    <div class="test-head">
+      <span class="test-title">Test ${no}</span>
+      <div class="mini-actions">
+        <button type="button" class="mini-btn" onclick="salinK(this, 'awal')">= K1</button>
+        <button type="button" class="mini-btn btn-prev" onclick="salinK(this, 'hasil')">New ${no - 1}</button>
+        <button type="button" class="mini-btn del" onclick="hapusTes(this)" title="Delete Test ${no}">✕</button>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="full">
+        <label class="lbl-k" for="k${no}">Old Coef (K${no})</label>
+        <input type="number" id="k${no}" class="inp-k" step="any" inputmode="decimal" oninput="onInputChange()">
+      </div>
+      <div>
+        <label class="lbl-a" for="a${no}">Actual (kg)</label>
+        <input type="number" id="a${no}" class="inp-a" step="any" inputmode="decimal" oninput="onInputChange()">
+      </div>
+      <div>
+        <label class="lbl-d" for="d${no}">Display (kg)</label>
+        <input type="number" id="d${no}" class="inp-d" step="any" inputmode="decimal" oninput="onInputChange()">
+      </div>
+    </div>
+    <div class="live-diff"></div>
+  `;
+  div.querySelector('.inp-k').value = values.k || '';
+  div.querySelector('.inp-a').value = values.a || '';
+  div.querySelector('.inp-d').value = values.d || '';
+  return div;
+}
+
+function reindexTests() {
+  getTestBlocks().forEach((block, idx) => {
+    const no = idx + 1;
+    block.querySelector('.test-title').textContent = `Test ${no}`;
+
+    const lblK = block.querySelector('.lbl-k');
+    const inpK = block.querySelector('.inp-k');
+    lblK.textContent = `Old Coef (K${no})`;
+    lblK.setAttribute('for', `k${no}`);
+    inpK.id = `k${no}`;
+
+    const lblA = block.querySelector('.lbl-a');
+    const inpA = block.querySelector('.inp-a');
+    lblA.setAttribute('for', `a${no}`);
+    inpA.id = `a${no}`;
+
+    const lblD = block.querySelector('.lbl-d');
+    const inpD = block.querySelector('.inp-d');
+    lblD.setAttribute('for', `d${no}`);
+    inpD.id = `d${no}`;
+
+    const btnPrev = block.querySelector('.btn-prev');
+    if (btnPrev) btnPrev.textContent = `New ${no - 1}`;
+
+    const btnDel = block.querySelector('.del');
+    if (btnDel) btnDel.title = `Delete Test ${no}`;
+  });
   updateAddBtn();
+}
+
+function getAutoNextK(blocks) {
+  const tol = getTol() || 0.5;
+  for (let i = blocks.length - 1; i >= 0; i--) {
+    const kPrev = parseFloat(blocks[i].querySelector('.inp-k').value);
+    const aPrev = parseFloat(blocks[i].querySelector('.inp-a').value);
+    const dPrev = parseFloat(blocks[i].querySelector('.inp-d').value);
+    if (kPrev > 0 && aPrev > 0 && dPrev > 0) {
+      const errPrev = Math.abs(aPrev - dPrev) / aPrev * 100;
+      return formatCoef3(errPrev < tol ? kPrev : kPrev * (aPrev / dPrev));
+    }
+  }
+  return blocks[0].querySelector('.inp-k').value || '';
+}
+
+function tambahTes(prefill = null, skipSave = false) {
+  const container = document.getElementById('testsContainer');
+  const blocks = getTestBlocks();
+  const nextNo = blocks.length + 1;
+  const initValues = prefill || { k: getAutoNextK(blocks), a: '', d: '' };
+  container.appendChild(createTestBlock(nextNo, initValues));
+  updateAddBtn();
+  if (!skipSave) onInputChange();
+}
+
+function hapusTes(btn) {
+  const blocks = getTestBlocks();
+  if (blocks.length <= 1) return;
+  const block = btn.closest('.test-block');
+  block.remove();
+  reindexTests();
   onInputChange();
 }
 
-function autoIsiKBerikutnya(targetTes) {
-  const tol = getTol() || 0.5;
-  const prev = targetTes - 1;
-  let kPrev = parseFloat(document.getElementById(`k${prev}`).value);
-  let aPrev = parseFloat(document.getElementById(`a${prev}`).value);
-  let dPrev = parseFloat(document.getElementById(`d${prev}`).value);
-
-  if (!(kPrev > 0 && aPrev > 0 && dPrev > 0) && prev !== 1) {
-    kPrev = parseFloat(document.getElementById('k1').value);
-    aPrev = parseFloat(document.getElementById('a1').value);
-    dPrev = parseFloat(document.getElementById('d1').value);
-  }
-
-  if (kPrev > 0 && aPrev > 0 && dPrev > 0) {
-    const errPrev = Math.abs(aPrev - dPrev) / aPrev * 100;
-    const nextK = errPrev < tol ? kPrev : kPrev * (aPrev / dPrev);
-    document.getElementById(`k${targetTes}`).value = formatCoef3(nextK);
-  } else if (document.getElementById('k1').value) {
-    document.getElementById(`k${targetTes}`).value = document.getElementById('k1').value;
-  }
+function isiDefaultK1() {
+  const first = getTestBlocks()[0];
+  if (first) first.querySelector('.inp-k').value = '1.000';
+  onInputChange();
 }
 
-function hapusTes(n) {
-  ['k', 'a', 'd'].forEach(p => document.getElementById(`${p}${n}`).value = '');
-  document.getElementById(`tes${n}`).classList.add('hidden');
-  updateAddBtn();
+function salinK(btn, mode) {
+  const block = btn.closest('.test-block');
+  const blocks = getTestBlocks();
+  const idx = blocks.indexOf(block);
+
+  if (mode === 'awal') {
+    const k1 = blocks[0].querySelector('.inp-k').value;
+    if (k1) block.querySelector('.inp-k').value = k1;
+  } else if (mode === 'hasil') {
+    for (let i = idx - 1; i >= 0; i--) {
+      const kPrev = parseFloat(blocks[i].querySelector('.inp-k').value);
+      const aPrev = parseFloat(blocks[i].querySelector('.inp-a').value);
+      const dPrev = parseFloat(blocks[i].querySelector('.inp-d').value);
+      if (kPrev > 0 && aPrev > 0 && dPrev > 0) {
+        block.querySelector('.inp-k').value = formatCoef3(kPrev * (aPrev / dPrev));
+        break;
+      }
+    }
+  }
   onInputChange();
 }
 
 function simpanData() {
   try {
-    const data = {};
-    FIELDS.forEach(id => data[id] = document.getElementById(id).value);
+    const data = {
+      tagId: document.getElementById('tagId').value,
+      tolInput: document.getElementById('tolInput').value,
+      tests: getTestBlocks().map(b => ({
+        k: b.querySelector('.inp-k').value,
+        a: b.querySelector('.inp-a').value,
+        d: b.querySelector('.inp-d').value
+      }))
+    };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   } catch (e) {}
 }
@@ -750,16 +804,33 @@ function simpanData() {
 function muatData() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return;
+    if (!raw) {
+      updateAddBtn();
+      return;
+    }
     const data = JSON.parse(raw);
-    FIELDS.forEach(id => {
-      if (data[id] !== undefined) {
-        if (id === 'tolInput' && data[id] === '') return;
-        document.getElementById(id).value = data[id];
+    if (data.tagId !== undefined) document.getElementById('tagId').value = data.tagId;
+    if (data.tolInput !== undefined && data.tolInput !== '') {
+      document.getElementById('tolInput').value = data.tolInput;
+    }
+
+    let tests = Array.isArray(data.tests) ? data.tests : [];
+    if (!tests.length && (data.k1 !== undefined || data.a1 !== undefined || data.d1 !== undefined)) {
+      tests = [{ k: data.k1 || '', a: data.a1 || '', d: data.d1 || '' }];
+      if (data.k2 || data.a2 || data.d2) tests.push({ k: data.k2 || '', a: data.a2 || '', d: data.d2 || '' });
+      if (data.k3 || data.a3 || data.d3) tests.push({ k: data.k3 || '', a: data.a3 || '', d: data.d3 || '' });
+    }
+
+    if (tests.length > 0) {
+      const first = getTestBlocks()[0];
+      first.querySelector('.inp-k').value = tests[0].k || '';
+      first.querySelector('.inp-a').value = tests[0].a || '';
+      first.querySelector('.inp-d').value = tests[0].d || '';
+      for (let i = 1; i < tests.length; i++) {
+        tambahTes(tests[i], true);
       }
-    });
-    if (data.k2 || data.a2 || data.d2) document.getElementById('tes2').classList.remove('hidden');
-    if (data.k3 || data.a3 || data.d3) document.getElementById('tes3').classList.remove('hidden');
+    }
+
     updateAddBtn();
     updateLivePreview();
   } catch (e) {
@@ -770,11 +841,18 @@ function muatData() {
 window.addEventListener('DOMContentLoaded', muatData);
 
 function resetForm() {
-  FIELDS.forEach(id => {
-    document.getElementById(id).value = (id === 'tolInput') ? '0.5' : '';
-  });
-  document.getElementById('tes2').classList.add('hidden');
-  document.getElementById('tes3').classList.add('hidden');
+  document.getElementById('tagId').value = '';
+  document.getElementById('tolInput').value = '0.5';
+
+  const blocks = getTestBlocks();
+  for (let i = blocks.length - 1; i >= 1; i--) {
+    blocks[i].remove();
+  }
+  const first = blocks[0];
+  first.querySelector('.inp-k').value = '';
+  first.querySelector('.inp-a').value = '';
+  first.querySelector('.inp-d').value = '';
+
   updateAddBtn();
   updateLivePreview();
   lastReportData = null;
@@ -783,48 +861,163 @@ function resetForm() {
   const el = document.getElementById('result');
   el.classList.remove('show');
   el.innerHTML = '';
-  document.getElementById('k1').focus();
+  first.querySelector('.inp-k').focus();
 }
 
-function salinK(targetTes, mode) {
-  if (mode === 'awal') {
-    const k1 = document.getElementById('k1').value;
-    if (k1) document.getElementById(`k${targetTes}`).value = k1;
-  } else if (mode === 'hasil') {
-    let srcIdx = targetTes - 1;
-    let kPrev = parseFloat(document.getElementById(`k${srcIdx}`).value);
-    let aPrev = parseFloat(document.getElementById(`a${srcIdx}`).value);
-    let dPrev = parseFloat(document.getElementById(`d${srcIdx}`).value);
-
-    if (!(kPrev > 0 && aPrev > 0 && dPrev > 0) && srcIdx !== 1) {
-      kPrev = parseFloat(document.getElementById('k1').value);
-      aPrev = parseFloat(document.getElementById('a1').value);
-      dPrev = parseFloat(document.getElementById('d1').value);
-    }
-
-    if (kPrev > 0 && aPrev > 0 && dPrev > 0) {
-      document.getElementById(`k${targetTes}`).value = formatCoef3(kPrev * (aPrev / dPrev));
-    }
+function getHeroMeta(r, mode) {
+  const lastTes = r.hasilTes[r.hasilTes.length - 1];
+  if (mode === 'tetap') {
+    const label = r.isSingle ? 'Final Coef (Tetap)' : `Final Coef (Test ${lastTes.no})`;
+    const nilai = formatCoef3(r.kTetap);
+    const pillText = r.errUtama < r.tol
+      ? `Error < ${r.tolStr}% · Pertahankan Old Coef`
+      : `Coef Terpakai · Error ${fmtId(r.errUtama, 2, 2)}%`;
+    return { label, nilai, pillText, isRefStyle: true };
   }
-  onInputChange();
+  const label = (!r.isSingle && r.semuaKSama)
+    ? 'Combined New Coef'
+    : (r.isSingle ? 'New Coef' : `New Coef (Test ${lastTes.no})`);
+  const nilai = formatCoef3(r.kBaruVal);
+  return {
+    label,
+    nilai,
+    pillText: r.statusUtama.teks,
+    isRefStyle: r.statusUtama.kls === 'ok'
+  };
 }
 
-function salinNilai(nilai, btn) {
-  const done = () => {
-    const ori = btn.textContent;
-    btn.textContent = 'Tersalin ✓';
-    setTimeout(() => btn.textContent = ori, 1500);
-  };
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(nilai).then(done).catch(() => {});
+function setHeroMode(mode) {
+  if (!lastReportData) return;
+  lastReportData.selectedMode = mode;
+  renderResultView(false);
+}
+
+function renderResultView(animateBar = true) {
+  const r = lastReportData;
+  if (!r) return;
+  const el = document.getElementById('result');
+  const hero = getHeroMeta(r, r.selectedMode);
+  const lastTes = r.hasilTes[r.hasilTes.length - 1];
+
+  const escapeHtml = (str) => str.replace(/[&<>"']/g, m => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[m]));
+
+  const metaRowsHtml = `
+    ${r.tagId ? `<div class="row"><span>Tag ID</span><span>${escapeHtml(r.tagId)}</span></div>` : ''}
+    <div class="row"><span>Tolerance</span><span>±${r.tolStr}%</span></div>
+  `;
+
+  let detailHtml = '';
+  if (r.isSingle) {
+    const t = r.hasilTes[0];
+    const tanda = t.selisih > 0 ? '+' : '';
+    const ket = t.selisih > 0 ? 'Lebih' : (t.selisih < 0 ? 'Kurang' : 'Pas');
+    detailHtml = `
+      ${metaRowsHtml}
+      <div class="row"><span>Old Coef</span><span>${formatCoef3(t.k)}</span></div>
+      <div class="row"><span>Actual</span><span>${fmtKg(t.a)} kg</span></div>
+      <div class="row"><span>Display</span><span>${fmtKg(t.d)} kg</span></div>
+      <div class="row"><span>Diff (Disp − Act)</span><span class="c-${t.status.kls}">${tanda}${fmtKg(t.selisih)} kg (${ket})</span></div>
+      <div class="row"><span>Error</span><span class="c-${t.status.kls}">${fmtId(t.errPct, 2, 2)}%</span></div>
+      <div class="row"><span>Correction Factor</span><span>${t.faktor.toFixed(4)}</span></div>
+    `;
   } else {
-    const tmp = document.createElement('textarea');
-    tmp.value = nilai;
-    document.body.appendChild(tmp);
-    tmp.select();
-    document.execCommand('copy');
-    document.body.removeChild(tmp);
-    done();
+    const cardsHtml = r.hasilTes.map((t, idx) => {
+      const isLast = idx === r.hasilTes.length - 1;
+      const cls = `c-${t.status.kls}`;
+      const tanda = t.selisih > 0 ? '+' : '';
+      const ket = t.selisih > 0 ? 'Lebih' : (t.selisih < 0 ? 'Kurang' : 'Pas');
+
+      let rightFoot = `<b>${formatCoef3(t.kBaru)}</b>`;
+      let rightLabel = 'New:';
+      if (isLast && r.selectedMode === 'tetap') {
+        rightLabel = 'Final:';
+        rightFoot = `<span class="c-${t.status.kls}"><b>${formatCoef3(t.k)}</b></span>`;
+      } else if (t.errPct < r.tol) {
+        rightLabel = 'Final:';
+        rightFoot = `<span class="c-ok"><b>${formatCoef3(t.k)}</b></span>`;
+      }
+
+      return `
+        <div class="test-res-item">
+          <div class="test-res-head">
+            <span>Test ${t.no}</span>
+            <span class="${cls}">Error ${fmtId(t.errPct, 2, 2)}%</span>
+          </div>
+          <div class="test-res-grid">
+            <div class="test-res-cell">
+              <div class="k">Old Coef</div>
+              <div class="v">${formatCoef3(t.k)}</div>
+            </div>
+            <div class="test-res-cell">
+              <div class="k">Actual</div>
+              <div class="v">${fmtKg(t.a)} kg</div>
+            </div>
+            <div class="test-res-cell">
+              <div class="k">Display</div>
+              <div class="v">${fmtKg(t.d)} kg</div>
+            </div>
+          </div>
+          <div class="test-res-foot">
+            <span>Diff: <b class="${cls}">${tanda}${fmtKg(t.selisih)} kg</b> (${ket})</span>
+            <span>${rightLabel} ${rightFoot}</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    const totalTanda = r.totalSelisih > 0 ? '+' : '';
+    const totalKet = r.totalSelisih > 0 ? 'Lebih' : (r.totalSelisih < 0 ? 'Kurang' : 'Pas');
+
+    detailHtml = `
+      ${metaRowsHtml}
+      ${cardsHtml}
+      <div class="row"><span>Total Actual (${r.hasilTes.length} tests)</span><span>${fmtKg(r.totalWB)} kg</span></div>
+      <div class="row"><span>Total Display (${r.hasilTes.length} tests)</span><span>${fmtKg(r.totalBW)} kg</span></div>
+      <div class="row"><span>Total Diff</span><span>${totalTanda}${fmtKg(r.totalSelisih)} kg (${totalKet})</span></div>
+      <div class="row"><span>Combined Coef</span><span>${formatCoef3(r.kGabungan)}</span></div>
+    `;
+  }
+
+  const modeSwitchHtml = r.errUtama >= r.tol ? `
+    <div class="mode-switch">
+      <button type="button" class="mode-btn ${r.selectedMode === 'tetap' ? 'active' : ''}" onclick="setHeroMode('tetap')">Tetap ${formatCoef3(r.kTetap)}</button>
+      <button type="button" class="mode-btn ${r.selectedMode === 'baru' ? 'active' : ''}" onclick="setHeroMode('baru')">Ubah ke ${formatCoef3(r.kBaruVal)}</button>
+    </div>
+  ` : '';
+
+  const minScale = Math.max(80, 100 - Math.max(5, getWarnMax(r.tol) * 3));
+  const visualPct = Math.max(0, Math.min(100, ((r.akurasiAktual - minScale) / (100 - minScale)) * 100));
+
+  el.className = 'result show';
+  el.innerHTML = `
+    ${detailHtml}
+    <div class="divider"></div>
+    ${modeSwitchHtml}
+    <div class="big">
+      <div class="label ${hero.isRefStyle ? 'ref' : ''}">${hero.label}</div>
+      <div class="value ${hero.nilai.length > 7 ? 'small' : ''} ${hero.isRefStyle ? 'ref' : ''}">${hero.nilai}</div>
+      <div><span class="badge ${r.statusUtama.kls}">${hero.pillText}</span></div>
+      <div class="result-actions">
+        <button type="button" class="jpg-btn" onclick="downloadJPG()">Download JPG</button>
+      </div>
+    </div>
+
+    <div class="akurasi-box">
+      <div class="akurasi-head">
+        <span class="t">Accuracy (${r.isSingle ? 'Test 1' : (r.semuaKSama ? 'Combined' : 'Test ' + lastTes.no)})</span>
+        <span class="v ${r.statusUtama.kls}">${fmtId(r.akurasiAktual, 2, 2)}%</span>
+      </div>
+      <div class="bar"><div id="akurasiBar" class="${r.statusUtama.kls}" style="width:${animateBar ? 0 : visualPct}%"></div></div>
+    </div>
+  `;
+
+  if (animateBar) {
+    requestAnimationFrame(() => {
+      const bar = document.getElementById('akurasiBar');
+      if (bar) bar.style.width = `${visualPct}%`;
+    });
   }
 }
 
@@ -835,23 +1028,24 @@ function hitung() {
 
   if (tol === null) {
     el.className = 'result show';
-    el.innerHTML = `<div style="text-align:center;font-size:11px;color:#c99494;padding:8px 0;">Input Toleransi (±%) tidak valid (harus &gt; 0 dan &lt; 50)</div>`;
+    el.innerHTML = `<div style="text-align:center;font-size:11px;color:#c99494;padding:8px 0;">Input Tolerance (±%) tidak valid (&gt; 0 dan &lt; 50)</div>`;
     lastReportData = null;
     return;
   }
 
+  const blocks = getTestBlocks();
   const hasilTes = [];
 
-  for (let i = 1; i <= 3; i++) {
-    const blockHidden = document.getElementById(`tes${i}`).classList.contains('hidden');
-    const kRaw = document.getElementById(`k${i}`).value.trim();
-    const aRaw = document.getElementById(`a${i}`).value.trim();
-    const dRaw = document.getElementById(`d${i}`).value.trim();
+  for (let i = 0; i < blocks.length; i++) {
+    const no = i + 1;
+    const kRaw = blocks[i].querySelector('.inp-k').value.trim();
+    const aRaw = blocks[i].querySelector('.inp-a').value.trim();
+    const dRaw = blocks[i].querySelector('.inp-d').value.trim();
 
-    if (blockHidden || (!kRaw && !aRaw && !dRaw)) {
-      if (i === 1) {
+    if (!kRaw && !aRaw && !dRaw) {
+      if (no === 1) {
         el.className = 'result show';
-        el.innerHTML = `<div style="text-align:center;font-size:11px;color:#c99494;padding:8px 0;">Input Pengetesan 1 belum diisi</div>`;
+        el.innerHTML = `<div style="text-align:center;font-size:11px;color:#c99494;padding:8px 0;">Input Test 1 belum diisi</div>`;
         lastReportData = null;
         return;
       }
@@ -864,7 +1058,7 @@ function hitung() {
 
     if (isNaN(k) || isNaN(a) || isNaN(d) || k <= 0 || a <= 0 || d <= 0) {
       el.className = 'result show';
-      el.innerHTML = `<div style="text-align:center;font-size:11px;color:#c99494;padding:8px 0;">Input Pengetesan ${i} tidak valid</div>`;
+      el.innerHTML = `<div style="text-align:center;font-size:11px;color:#c99494;padding:8px 0;">Input Test ${no} tidak valid</div>`;
       lastReportData = null;
       return;
     }
@@ -876,7 +1070,7 @@ function hitung() {
     const rawLoad = d / k;
 
     hasilTes.push({
-      no: i, k, a, d, faktor, kBaru, selisih, errPct, rawLoad,
+      no, k, a, d, faktor, kBaru, selisih, errPct, rawLoad,
       status: getStatus(errPct, tol)
     });
   }
@@ -894,46 +1088,19 @@ function hitung() {
   const totalRaw     = hasilTes.reduce((s, t) => s + t.rawLoad, 0);
   const kGabungan    = totalWB / totalRaw;
 
-  let labelUtama = '';
-  let nilaiUtama = '';
-  let subRefText = '';
-  let errUtama   = lastTes.errPct;
-  let statusUtama = lastTes.status;
-
-  if (!isSingle && semuaKSama) {
-    errUtama = Math.abs(totalSelisih) / totalWB * 100;
-    statusUtama = getStatus(errUtama, tol);
-    if (errUtama < tol) {
-      labelUtama = 'Koefisien Dipertahankan';
-      nilaiUtama = formatCoef3(hasilTes[0].k);
-      subRefText = `Ref gabungan: ${formatCoef3(kGabungan)}`;
-    } else {
-      labelUtama = 'Koefisien Baru (Gabungan)';
-      nilaiUtama = formatCoef3(kGabungan);
-      subRefText = `Presisi 4 desimal: ${kGabungan.toFixed(4)}`;
-    }
-  } else {
-    if (lastTes.errPct < tol) {
-      labelUtama = 'Koefisien Final (Tetap)';
-      nilaiUtama = formatCoef3(lastTes.k);
-      subRefText = `Ref hitungan Tes ${lastTes.no}: ${formatCoef3(lastTes.kBaru)} (tidak diubah)`;
-    } else {
-      labelUtama = isSingle ? 'Koefisien Baru' : `Koefisien Baru (Tes ${lastTes.no})`;
-      nilaiUtama = formatCoef3(lastTes.kBaru);
-      subRefText = `Presisi 4 desimal: ${lastTes.kBaru.toFixed(4)}`;
-    }
-  }
-
+  const kTetap   = (!isSingle && semuaKSama) ? hasilTes[0].k : lastTes.k;
+  const kBaruVal = (!isSingle && semuaKSama) ? kGabungan : lastTes.kBaru;
+  const errUtama = (!isSingle && semuaKSama) ? (Math.abs(totalSelisih) / totalWB * 100) : lastTes.errPct;
+  const statusUtama = getStatus(errUtama, tol);
   const akurasiAktual = Math.max(0, 100 - errUtama);
-  const isRef = statusUtama.kls === 'ok';
-  const now = new Date();
-  const tolStr = fmtPctClean(tol);
+
+  const autoTetap = (errUtama < tol) || (hasilTes.length >= 3 && errUtama <= getWarnMax(tol));
 
   lastReportData = {
     tagId,
     tol,
-    tolStr,
-    now,
+    tolStr: fmtPctClean(tol),
+    now: new Date(),
     hasilTes,
     isSingle,
     semuaKSama,
@@ -941,118 +1108,15 @@ function hitung() {
     totalBW,
     totalSelisih,
     kGabungan,
-    labelUtama,
-    nilaiUtama,
-    subRefText,
+    kTetap,
+    kBaruVal,
+    errUtama,
     statusUtama,
-    akurasiAktual
+    akurasiAktual,
+    selectedMode: autoTetap ? 'tetap' : 'baru'
   };
 
-  const escapeHtml = (str) => str.replace(/[&<>"']/g, m => ({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-  }[m]));
-
-  const metaRowsHtml = `
-    ${tagId ? `<div class="row"><span>Tag ID</span><span>${escapeHtml(tagId)}</span></div>` : ''}
-    <div class="row"><span>Target Toleransi</span><span>±${tolStr}%</span></div>
-  `;
-
-  let detailHtml = '';
-  if (isSingle) {
-    const t = hasilTes[0];
-    const tanda = t.selisih > 0 ? '+' : '';
-    const ket = t.selisih > 0 ? 'Lebih' : (t.selisih < 0 ? 'Kurang' : 'Pas');
-    detailHtml = `
-      ${metaRowsHtml}
-      <div class="row"><span>Koefisien Lama</span><span>${formatCoef3(t.k)}</span></div>
-      <div class="row"><span>Berat Aktual</span><span>${fmtKg(t.a)} kg</span></div>
-      <div class="row"><span>Berat Display</span><span>${fmtKg(t.d)} kg</span></div>
-      <div class="row"><span>Selisih (Disp − Akt)</span><span class="c-${t.status.kls}">${tanda}${fmtKg(t.selisih)} kg (${ket})</span></div>
-      <div class="row"><span>Deviasi / Error</span><span class="c-${t.status.kls}">${fmtId(t.errPct, 2, 2)}%</span></div>
-      <div class="row"><span>Faktor Koreksi</span><span>${t.faktor.toFixed(4)}</span></div>
-    `;
-  } else {
-    const cardsHtml = hasilTes.map(t => {
-      const cls = `c-${t.status.kls}`;
-      const tanda = t.selisih > 0 ? '+' : '';
-      const ket = t.selisih > 0 ? 'Lebih' : (t.selisih < 0 ? 'Kurang' : 'Pas');
-      const newText = t.errPct < tol
-        ? `<span class="c-ok">Tetap (Ref ${formatCoef3(t.kBaru)})</span>`
-        : `<b>${formatCoef3(t.kBaru)}</b>`;
-
-      return `
-        <div class="test-res-item">
-          <div class="test-res-head">
-            <span>Pengetesan ${t.no}</span>
-            <span class="${cls}">Error ${fmtId(t.errPct, 2, 2)}%</span>
-          </div>
-          <div class="test-res-grid">
-            <div class="test-res-cell">
-              <div class="k">Old Coef</div>
-              <div class="v">${formatCoef3(t.k)}</div>
-            </div>
-            <div class="test-res-cell">
-              <div class="k">Aktual</div>
-              <div class="v">${fmtKg(t.a)} kg</div>
-            </div>
-            <div class="test-res-cell">
-              <div class="k">Display</div>
-              <div class="v">${fmtKg(t.d)} kg</div>
-            </div>
-          </div>
-          <div class="test-res-foot">
-            <span>Selisih: <b class="${cls}">${tanda}${fmtKg(t.selisih)} kg</b> (${ket})</span>
-            <span>New: ${newText}</span>
-          </div>
-        </div>
-      `;
-    }).join('');
-
-    const totalTanda = totalSelisih > 0 ? '+' : '';
-    const totalKet = totalSelisih > 0 ? 'Lebih' : (totalSelisih < 0 ? 'Kurang' : 'Pas');
-
-    detailHtml = `
-      ${metaRowsHtml}
-      ${cardsHtml}
-      <div class="row"><span>Total Aktual (${hasilTes.length} tes)</span><span>${fmtKg(totalWB)} kg</span></div>
-      <div class="row"><span>Total Display (${hasilTes.length} tes)</span><span>${fmtKg(totalBW)} kg</span></div>
-      <div class="row"><span>Total Selisih</span><span>${totalTanda}${fmtKg(totalSelisih)} kg (${totalKet})</span></div>
-      <div class="row"><span>K Gabungan (Terbobot)</span><span>${formatCoef3(kGabungan)}</span></div>
-    `;
-  }
-
-  el.className = 'result show';
-  el.innerHTML = `
-    ${detailHtml}
-    <div class="divider"></div>
-    <div class="big">
-      <div class="label ${isRef ? 'ref' : ''}">${labelUtama}</div>
-      <div class="value ${nilaiUtama.length > 7 ? 'small' : ''} ${isRef ? 'ref' : ''}">${nilaiUtama}</div>
-      <div class="sub-ref">${subRefText}</div>
-      <div><span class="badge ${statusUtama.kls}">${statusUtama.teks}</span></div>
-      <div class="result-actions">
-        <button type="button" class="copy-btn" onclick="salinNilai('${nilaiUtama}', this)">Salin Koefisien</button>
-        <button type="button" class="copy-btn jpg-btn" onclick="downloadJPG()">Download JPG</button>
-      </div>
-    </div>
-
-    <div class="akurasi-box">
-      <div class="akurasi-head">
-        <span class="t">Akurasi (${isSingle ? 'Tes 1' : (semuaKSama ? 'Gabungan' : 'Tes ' + lastTes.no)})</span>
-        <span class="v ${statusUtama.kls}">${fmtId(akurasiAktual, 2, 2)}%</span>
-      </div>
-      <div class="bar"><div id="akurasiBar" class="${statusUtama.kls}" style="width:0%"></div></div>
-    </div>
-  `;
-
-  requestAnimationFrame(() => {
-    const bar = document.getElementById('akurasiBar');
-    if (bar) {
-      const minScale = Math.max(80, 100 - Math.max(5, getWarnMax(tol) * 3));
-      const visualPct = Math.max(0, Math.min(100, ((akurasiAktual - minScale) / (100 - minScale)) * 100));
-      bar.style.width = `${visualPct}%`;
-    }
-  });
+  renderResultView(true);
 }
 
 function drawRoundRect(ctx, x, y, w, h, r) {
@@ -1072,6 +1136,7 @@ function drawRoundRect(ctx, x, y, w, h, r) {
 function downloadJPG() {
   if (!lastReportData) return;
   const r = lastReportData;
+  const hero = getHeroMeta(r, r.selectedMode);
 
   const W = 840;
   const P = 44;
@@ -1081,11 +1146,11 @@ function downloadJPG() {
   const cardH = 172;
   const cardGap = 20;
   const summaryH = 132;
-  const heroH = 246;
+  const heroH = 228;
 
   const cardsTotalH = r.hasilTes.length * cardH + (r.hasilTes.length - 1) * cardGap;
   const afterCardsGap = r.isSingle ? 26 : (cardGap + summaryH + 24);
-  const H = headerH + topGap + cardsTotalH + afterCardsGap + heroH + 72;
+  const H = headerH + topGap + cardsTotalH + afterCardsGap + heroH + 68;
 
   const canvas = document.createElement('canvas');
   canvas.width = W;
@@ -1096,11 +1161,9 @@ function downloadJPG() {
   const statusBg    = (kls) => kls === 'ok' ? 'rgba(155,176,148,0.18)' : (kls === 'warn' ? 'rgba(212,187,138,0.2)' : 'rgba(201,148,148,0.2)');
   const statusTextDarkBg = (kls) => kls === 'ok' ? '#b2c7ac' : (kls === 'warn' ? '#d4bb8a' : '#e09a9a');
 
-  // Background body
   ctx.fillStyle = '#f2f4f7';
   ctx.fillRect(0, 0, W, H);
 
-  // Header gelap
   ctx.fillStyle = '#1a1c20';
   ctx.fillRect(0, 0, W, headerH);
 
@@ -1111,17 +1174,16 @@ function downloadJPG() {
   ctx.textBaseline = 'alphabetic';
   ctx.fillStyle = '#eceef1';
   ctx.font = 'bold 27px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-  ctx.fillText('LAPORAN KOEFISIEN', P, 58);
+  ctx.fillText('SPAN COEFFICIENT REPORT', P, 58);
 
   ctx.fillStyle = '#b8a888';
   ctx.font = '600 16px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-  ctx.fillText(`Belt Scale · Toleransi Target ±${r.tolStr}%`, P, 92);
+  ctx.fillText(`Belt Scale · Tolerance ±${r.tolStr}%`, P, 92);
 
   ctx.fillStyle = '#8b93a1';
   ctx.font = '500 15px "SF Mono", Consolas, monospace';
-  ctx.fillText(`Tanggal: ${tglStr}`, P, 132);
+  ctx.fillText(`Date: ${tglStr}`, P, 132);
 
-  // Box Tag ID di kanan header
   const tagBoxW = 240;
   const tagBoxH = 84;
   const tagBoxX = W - P - tagBoxW;
@@ -1133,18 +1195,21 @@ function downloadJPG() {
   ctx.lineWidth = 1.5;
   ctx.stroke();
 
+  ctx.textAlign = 'center';
+  const tagCenterX = tagBoxX + tagBoxW / 2;
   ctx.fillStyle = '#8b93a1';
   ctx.font = '600 12px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
-  ctx.fillText('TAG ID', tagBoxX + 16, tagBoxY + 30);
+  ctx.fillText('TAG ID', tagCenterX, tagBoxY + 30);
 
   ctx.fillStyle = r.tagId ? '#eceef1' : '#6b7280';
   ctx.font = 'bold 21px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
-  ctx.fillText(r.tagId || '-', tagBoxX + 16, tagBoxY + 62, tagBoxW - 32);
+  ctx.fillText(r.tagId || '-', tagCenterX, tagBoxY + 62, tagBoxW - 24);
+  ctx.textAlign = 'left';
 
   let y = headerH + topGap;
 
-  // Kartu tiap pengetesan
-  r.hasilTes.forEach((t) => {
+  r.hasilTes.forEach((t, idx) => {
+    const isLast = idx === r.hasilTes.length - 1;
     drawRoundRect(ctx, P, y, CW, cardH, 12);
     ctx.fillStyle = '#ffffff';
     ctx.fill();
@@ -1154,7 +1219,7 @@ function downloadJPG() {
 
     ctx.fillStyle = '#1a1c20';
     ctx.font = 'bold 19px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
-    ctx.fillText(`Pengetesan ${t.no}`, P + 24, y + 40);
+    ctx.fillText(`Test ${t.no}`, P + 24, y + 40);
 
     const errLabel = `Error ${fmtId(t.errPct, 2, 2)}%`;
     ctx.fillStyle = statusColor(t.status.kls);
@@ -1171,10 +1236,11 @@ function downloadJPG() {
     ctx.stroke();
     ctx.setLineDash([]);
 
+    ctx.textAlign = 'center';
     const cols = [
-      { k: 'KOEFISIEN LAMA', v: formatCoef3(t.k), x: P + 24 },
-      { k: 'BERAT AKTUAL', v: `${fmtKg(t.a)} kg`, x: P + 266 },
-      { k: 'BERAT DISPLAY', v: `${fmtKg(t.d)} kg`, x: P + 514 }
+      { k: 'OLD COEF', v: formatCoef3(t.k), x: P + CW * (1 / 6) },
+      { k: 'ACTUAL', v: `${fmtKg(t.a)} kg`, x: P + CW * (3 / 6) },
+      { k: 'DISPLAY', v: `${fmtKg(t.d)} kg`, x: P + CW * (5 / 6) }
     ];
     cols.forEach(c => {
       ctx.fillStyle = '#6b7280';
@@ -1185,18 +1251,25 @@ function downloadJPG() {
       ctx.font = '600 19px "SF Mono", Consolas, monospace';
       ctx.fillText(c.v, c.x, y + 114);
     });
+    ctx.textAlign = 'left';
 
     const tanda = t.selisih > 0 ? '+' : '';
     const ket = t.selisih > 0 ? 'Lebih' : (t.selisih < 0 ? 'Kurang' : 'Pas');
-    const selText = `Selisih: ${tanda}${fmtKg(t.selisih)} kg (${ket})`;
+    const selText = `Diff: ${tanda}${fmtKg(t.selisih)} kg (${ket})`;
     ctx.fillStyle = statusColor(t.status.kls);
     ctx.font = 'bold 17px "SF Mono", Consolas, monospace';
     ctx.fillText(selText, P + 24, y + 150);
 
-    const newStr = t.errPct < r.tol
-      ? `Baru: Tetap (Ref ${formatCoef3(t.kBaru)})`
-      : `Koefisien Baru: ${formatCoef3(t.kBaru)}`;
-    ctx.fillStyle = t.errPct < r.tol ? '#2c6e3f' : '#1a1c20';
+    let newStr = `New Coef: ${formatCoef3(t.kBaru)}`;
+    let newCol = '#1a1c20';
+    if (isLast && r.selectedMode === 'tetap') {
+      newStr = `Final Coef: ${formatCoef3(t.k)}`;
+      newCol = statusColor(t.status.kls);
+    } else if (t.errPct < r.tol) {
+      newStr = `Final Coef: ${formatCoef3(t.k)}`;
+      newCol = '#2c6e3f';
+    }
+    ctx.fillStyle = newCol;
     ctx.font = 'bold 17px "SF Mono", Consolas, monospace';
     const newW = ctx.measureText(newStr).width;
     ctx.fillText(newStr, P + CW - 24 - newW, y + 150);
@@ -1215,10 +1288,10 @@ function downloadJPG() {
     const tTanda = r.totalSelisih > 0 ? '+' : '';
     const tKet = r.totalSelisih > 0 ? 'Lebih' : (r.totalSelisih < 0 ? 'Kurang' : 'Pas');
     const grid2x2 = [
-      { k: `TOTAL AKTUAL (${r.hasilTes.length} TES)`, v: `${fmtKg(r.totalWB)} kg`, x: P + 24, yOff: 34 },
-      { k: `TOTAL DISPLAY (${r.hasilTes.length} TES)`, v: `${fmtKg(r.totalBW)} kg`, x: P + 395, yOff: 34 },
-      { k: 'TOTAL SELISIH', v: `${tTanda}${fmtKg(r.totalSelisih)} kg (${tKet})`, x: P + 24, yOff: 88 },
-      { k: 'K GABUNGAN (TERBOBOT)', v: formatCoef3(r.kGabungan), x: P + 395, yOff: 88 }
+      { k: `TOTAL ACTUAL (${r.hasilTes.length} TESTS)`, v: `${fmtKg(r.totalWB)} kg`, x: P + 24, yOff: 34 },
+      { k: `TOTAL DISPLAY (${r.hasilTes.length} TESTS)`, v: `${fmtKg(r.totalBW)} kg`, x: P + 395, yOff: 34 },
+      { k: 'TOTAL DIFF', v: `${tTanda}${fmtKg(r.totalSelisih)} kg (${tKet})`, x: P + 24, yOff: 88 },
+      { k: 'COMBINED COEF', v: formatCoef3(r.kGabungan), x: P + 395, yOff: 88 }
     ];
     grid2x2.forEach(item => {
       ctx.fillStyle = '#6b7280';
@@ -1235,7 +1308,6 @@ function downloadJPG() {
     y += 6;
   }
 
-  // Kotak Hasil Final
   drawRoundRect(ctx, P, y, CW, heroH, 14);
   ctx.fillStyle = '#1a1c20';
   ctx.fill();
@@ -1243,34 +1315,28 @@ function downloadJPG() {
   ctx.textAlign = 'center';
   const cx = W / 2;
 
-  ctx.fillStyle = r.statusUtama.kls === 'ok' ? '#9bb094' : '#8b93a1';
+  ctx.fillStyle = hero.isRefStyle ? '#9bb094' : '#8b93a1';
   ctx.font = '600 15px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
-  ctx.fillText(r.labelUtama.toUpperCase(), cx, y + 48);
+  ctx.fillText(hero.label.toUpperCase(), cx, y + 48);
 
-  ctx.fillStyle = r.statusUtama.kls === 'ok' ? '#b2c7ac' : '#ffffff';
-  ctx.font = 'bold 56px "SF Mono", Consolas, monospace';
-  ctx.fillText(r.nilaiUtama, cx, y + 114);
+  ctx.fillStyle = hero.isRefStyle ? '#b2c7ac' : '#ffffff';
+  ctx.font = 'bold 58px "SF Mono", Consolas, monospace';
+  ctx.fillText(hero.nilai, cx, y + 118);
 
-  ctx.fillStyle = '#8b93a1';
-  ctx.font = '500 15px "SF Mono", Consolas, monospace';
-  ctx.fillText(r.subRefText, cx, y + 150);
-
-  const pillText = `${r.statusUtama.teks}  ·  Akurasi ${fmtId(r.akurasiAktual, 2, 2)}%`;
+  const pillText = `${hero.pillText}  ·  Accuracy ${fmtId(r.akurasiAktual, 2, 2)}%`;
   ctx.font = 'bold 14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
   const pillW = Math.min(CW - 40, ctx.measureText(pillText).width + 40);
-  drawRoundRect(ctx, cx - pillW / 2, y + 176, pillW, 38, 19);
+  drawRoundRect(ctx, cx - pillW / 2, y + 154, pillW, 38, 19);
   ctx.fillStyle = statusBg(r.statusUtama.kls);
   ctx.fill();
 
   ctx.fillStyle = statusTextDarkBg(r.statusUtama.kls);
-  ctx.fillText(pillText, cx, y + 200, pillW - 22);
+  ctx.fillText(pillText, cx, y + 178, pillW - 22);
 
-  // Footer
   ctx.fillStyle = '#6b7280';
   ctx.font = '500 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
-  ctx.fillText(`Belt Scale · Span Correction · Acuan Toleransi ±${r.tolStr}%`, cx, y + heroH + 42);
+  ctx.fillText('Belt Scale · Span Correction', cx, y + heroH + 40);
 
-  // Export JPG (tanpa jam di nama file)
   const cleanTag = r.tagId ? r.tagId.replace(/[^a-zA-Z0-9_-]/g, '_') : 'BeltScale';
   const stamp = `${d.getFullYear()}${pad2(d.getMonth() + 1)}${pad2(d.getDate())}`;
   const filename = `Coef_${cleanTag}_${stamp}.jpg`;
