@@ -1,602 +1,333 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1a1c20">
+<title>Kalkulator Koefisien Belt Scale</title>
 
-    <meta name="theme-color" content="#050505">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="E&I Calibration">
-    <meta name="mobile-web-app-capable" content="yes">
+<!-- === TAMBAHAN UNTUK PWA === -->
+<link rel="manifest" href="manifest.json">
 
-    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-    <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
-    <link rel="manifest" href="./manifest.json">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+    background: #1a1c20;
+    background-image: radial-gradient(ellipse at 50% -10%, rgba(200,190,170,.04), transparent 55%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    color: #c9cdd3;
+  }
+  .card {
+    background: #202329;
+    border: 1px solid #2b2f36;
+    border-radius: 16px;
+    padding: 28px 26px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 30px 70px rgba(0,0,0,.45);
+    position: relative;
+  }
 
-    <title>E&I DEPT - MOBILE CALIBRATION v20</title>
-    <style>
-        :root { --bg: #050505; --card: #111; --gold: #d4af37; --green: #00ff41; --blue: #00d4ff; --red: #ff3b30; --orange: #ff9500; --input: #181818; }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: #f0f0f0; margin: 0; padding: 12px; display: flex; justify-content: center; }
-        .container { background: var(--card); width: 100%; max-width: 540px; border-radius: 28px; border: 1px solid #222; overflow: hidden; padding-bottom: 20px; box-shadow: 0 10px 50px #000; }
-        .top-bar { background: #000; padding: 22px 20px; text-align: center; border-bottom: 3px solid var(--gold); border-top-left-radius: 28px; border-top-right-radius: 28px; }
-        .dept-title { font-size: 16px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: #fff; }
-        .sub-dept { font-size: 11px; color: var(--gold); font-weight: bold; letter-spacing: 5px; text-transform: uppercase; margin-top: 5px; }
-        .header-lightning { font-size: 20px; color: var(--gold); margin-top: 8px; letter-spacing: 3px; text-shadow: 0 0 8px rgba(212,175,55,0.4); animation: pulse 2s infinite; }
-        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
-        .content { padding: 16px; }
+  .info-btn {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: transparent;
+    border: 1px solid #4a5058;
+    color: #8b93a1;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all .2s;
+    font-family: "SF Mono", monospace;
+  }
+  .info-btn:hover {
+    border-color: #b8a888;
+    color: #b8a888;
+    background: rgba(184,168,136,.08);
+  }
 
-        .section-title {
-            font-size: 10px; font-weight: 900; color: #666; margin: 20px 0 10px; padding: 0 0 10px 0;
-            text-transform: uppercase; text-align: left; letter-spacing: 3px;
-            border-bottom: 1px solid #1a1a1a; display: flex; align-items: center; gap: 10px;
-        }
-        .section-title::after { content: ""; width: 50px; height: 2px; background: var(--gold); flex-shrink: 0; }
+  .modal-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(10, 11, 14, 0.75);
+    backdrop-filter: blur(3px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 100;
+    opacity: 0; pointer-events: none;
+    transition: opacity .25s ease;
+  }
+  .modal-overlay.show { opacity: 1; pointer-events: auto; }
+  .modal-box {
+    background: #202329;
+    border: 1px solid #2b2f36;
+    border-radius: 14px;
+    padding: 22px 20px;
+    max-width: 360px; width: 100%;
+    box-shadow: 0 20px 60px rgba(0,0,0,.6);
+    transform: translateY(10px);
+    transition: transform .25s ease;
+  }
+  .modal-overlay.show .modal-box { transform: translateY(0); }
+  .modal-title {
+    font-size: 13px; font-weight: 600; color: #eceef1;
+    letter-spacing: .5px; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .modal-title::before {
+    content: "i"; display: inline-flex;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: #b8a888; color: #1a1c20;
+    font-size: 10px; font-weight: 800;
+    align-items: center; justify-content: center;
+    font-family: serif;
+  }
+  .modal-list {
+    list-style: none;
+    font-size: 11.5px; color: #8b93a1; line-height: 1.6;
+  }
+  .modal-list li {
+    padding: 8px 0;
+    border-bottom: 1px dashed #2b2f36;
+  }
+  .modal-list li:last-child { border-bottom: none; }
+  .modal-list b { color: #c9cdd3; font-weight: 600; }
+  
+  .modal-btn {
+    margin-top: 18px; width: 100%; padding: 10px;
+    font-size: 11px; font-weight: 600; letter-spacing: 1px;
+    text-transform: uppercase; color: #1a1c20;
+    background: #c9cdd3; border: none; border-radius: 7px;
+    cursor: pointer; transition: background .2s;
+  }
+  .modal-btn:hover { background: #eceef1; }
 
-        .row { display: flex; gap: 8px; margin-bottom: 10px; }
-        .col { flex: 1; text-align: center; }
-        label { display: block; font-size: 9px; font-weight: bold; color: #777; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
-        input, select { width: 100%; padding: 14px; border-radius: 10px; box-sizing: border-box; font-size: 14px; text-align: center; background: var(--input); color: #fff; border: 1px solid #333; outline: none; font-family: 'Consolas', monospace; }
-        input:focus, select:focus { border-color: var(--gold); }
-        input[type="date"] { min-height: 45px; font-family: 'Segoe UI', sans-serif; }
-        input:disabled { opacity: 0.4; background: #0a0a0a; }
+  h1 {
+    font-size: 15px; font-weight: 600; text-align: center;
+    color: #eceef1; letter-spacing: .3px; margin-bottom: 4px;
+  }
+  .sub {
+    text-align: center; font-size: 10px; color: #6b7280;
+    letter-spacing: 2px; text-transform: uppercase; margin-bottom: 26px;
+  }
+  label {
+    display: block; font-size: 10px; font-weight: 500;
+    color: #767d88; letter-spacing: 1.2px; text-transform: uppercase;
+    margin-bottom: 7px; margin-top: 16px;
+  }
+  input {
+    width: 100%; padding: 13px 14px; font-size: 16px;
+    font-family: "SF Mono", "JetBrains Mono", Consolas, monospace;
+    color: #eceef1; font-weight: 500;
+    background: #17191d; border: 1px solid #2b2f36;
+    border-radius: 9px; outline: none; transition: border .2s, box-shadow .2s;
+  }
+  input:focus {
+    border-color: #b8a888;
+    box-shadow: 0 0 0 3px rgba(184,168,136,.08);
+  }
+  input::placeholder { color: #3f444c; }
 
-        .tol-selector-row { display: flex; gap: 8px; margin: 10px 0; }
-        .tol-mode-btn { flex: 1; padding: 12px; background: #1a1a1a; border: 1px solid #333; border-radius: 10px; color: #666; font-size: 10px; font-weight: 800; cursor: pointer; text-align: center; transition: all 0.2s; letter-spacing: 1px; }
-        .tol-mode-btn.active { background: var(--gold); color: #000; border-color: #fff; }
-        .tol-input-row { display: flex; gap: 8px; align-items: center; }
-        .tol-input-col { flex: 1; text-align: center; }
-        .tol-unit-display { padding: 14px 8px; background: #0a0a0a; border: 1px solid #333; border-radius: 10px; color: var(--gold); font-weight: bold; font-size: 12px; text-align: center; min-width: 50px; }
+  button.calc-btn {
+    width: 100%; padding: 14px; margin-top: 26px;
+    font-size: 12px; font-weight: 600; letter-spacing: 2px;
+    text-transform: uppercase; color: #1a1c20;
+    background: #c9cdd3; border: none; border-radius: 9px; cursor: pointer;
+    transition: background .2s, transform .1s;
+  }
+  button.calc-btn:hover { background: #eceef1; }
+  button.calc-btn:active { transform: scale(.99); }
 
-        .work-zone { background: #000; border: 1px solid #222; padding: 16px; border-radius: 16px; margin: 10px 0; }
-        .direction-row, .state-row { display: flex; gap: 8px; margin-bottom: 10px; }
-        .dir-btn, .state-btn { flex: 1; padding: 12px; background: #1a1a1a; border: 1px solid #333; border-radius: 10px; color: #666; font-size: 10px; font-weight: 800; cursor: pointer; text-align: center; transition: all 0.2s; letter-spacing: 1px; }
-        .dir-btn.active, .state-btn.active { background: var(--gold); color: #000; border-color: #fff; }
-        .state-btn.found-active { background: var(--orange); color: #000; border-color: #fff; }
-        .ideal-display { background: #0a0a0a; border: 1px dashed var(--blue); padding: 14px; border-radius: 12px; text-align: center; margin: 10px 0; }
-        .ideal-val { font-family: 'Consolas', monospace; font-size: 30px; color: var(--blue); font-weight: bold; letter-spacing: 1px; }
-        .btn-add, .btn-auto { width: 100%; padding: 15px; background: #0056b3; color: white; border: none; border-radius: 14px; font-weight: 800; font-size: 14px; margin-top: 8px; cursor: pointer; letter-spacing: 1px; transition: all 0.2s; }
-        .btn-add:hover { background: #0066cc; }
-        .btn-auto { background: #2a2a2a; font-size: 11px; margin-top: 4px; color: #aaa; }
-        .btn-auto:hover { background: #333; }
-        .btn-auto.running { background: #ff9500 !important; color: #000 !important; animation: pulse 1.5s infinite; }
-        .table-scroll { width: 100%; overflow-x: auto; margin-top: 10px; border-radius: 12px; }
-        table { width: 100%; border-collapse: collapse; font-size: 8px; min-width: 520px; }
-        th { padding: 12px 3px; background: #0a0a0a; color: #555; text-transform: uppercase; font-size: 8px; border-bottom: 1px solid #222; letter-spacing: 1px; font-weight: 700; }
-        td { padding: 10px 3px; border-bottom: 1px solid #151515; text-align: center; font-family: 'Consolas', monospace; }
-        tr:last-child td { border-bottom: none; }
-        .btn-del-box { width: 22px; height: 22px; background: #1a1a1a; border: 1px solid #444; color: #888; font-weight: 900; cursor: pointer; border-radius: 6px; font-size: 10px; transition: all 0.2s; }
-        .btn-del-box:hover { background: #300; border-color: var(--red); color: var(--red); }
-        .chart-container { background: #000; border: 1px solid #333; border-radius: 14px; padding: 12px; margin-top: 15px; }
-        canvas { width: 100%; height: auto; display: block; border-radius: 8px; }
-        .chart-legend { display: flex; justify-content: center; gap: 20px; margin-top: 10px; font-size: 9px; font-weight: bold; color: #777; flex-wrap: wrap; }
-        .chart-legend span { display: flex; align-items: center; gap: 5px; }
-        .legend-dash { width: 16px; height: 0; border-top: 2px dashed var(--green); }
-        .legend-line-up { width: 16px; height: 0; border-top: 2px solid var(--blue); }
-        .legend-line-down { width: 16px; height: 0; border-top: 2px solid var(--red); }
+  .result { margin-top: 22px; display: none; }
+  .result.show { display: block; animation: fade .35s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
-        #print-header, #print-footer, #print-summary { display: none; }
-        @media print {
-            @page { size: A4; margin: 10mm; }
-            body { background: white !important; color: black !important; padding: 0 !important; font-size: 10px !important; }
-            .container { overflow: visible !important; border: none !important; box-shadow: none !important; width: 100% !important; background: white !important; max-width: 100% !important; border-radius: 0 !important; }
-            .top-bar, .section-title, .work-zone, .btn-add, .btn-auto, .btn-print, .btn-clear, .btn-reset-all,
-            input, select, label, .btn-del-box, .no-print, .direction-row, .state-row,
-            .chart-legend, .tol-selector-row, .tol-input-row { display: none !important; }
-            .chart-container { display: block !important; background: white !important; border: 1px solid #000 !important; page-break-inside: avoid; padding: 8px !important; margin-bottom: 15px !important; border-radius: 0 !important; }
-            canvas { width: 100% !important; height: auto !important; background: white !important; }
-            .table-scroll { overflow: visible !important; width: 100% !important; }
-            table { width: 100% !important; border: 1px solid #000 !important; margin-top: 8px; border-collapse: collapse; min-width: auto !important; font-size: 9px !important; }
-            th { background: #e8e8e8 !important; color: black !important; border: 1px solid #000 !important; padding: 6px 3px; font-size: 8px; -webkit-print-color-adjust: exact; font-weight: bold; }
-            td { border: 1px solid #000 !important; padding: 6px 3px; font-size: 9px; color: black !important; }
-            td.pass { color: #006600 !important; font-weight: bold; }
-            td.fail { color: #cc0000 !important; font-weight: bold; }
-            #print-header { display: block !important; width: 100%; margin-bottom: 15px; }
-            .pdf-brand-box { background: #f0f0f0 !important; padding: 12px; border: 2px solid #000; text-align: center; margin-bottom: 10px; -webkit-print-color-adjust: exact; }
-            .pdf-brand-box .dept { font-size: 14px; font-weight: 900; color: black; text-transform: uppercase; display: block; }
-            .pdf-brand-box .sub { font-size: 9px; font-weight: bold; color: #333; letter-spacing: 3px; margin-top: 2px; display: block; }
-            .pdf-report-title { font-size: 11px; font-weight: 900; text-align: center; margin: 8px 0 12px; text-decoration: underline; text-transform: uppercase; }
-            .pdf-info-container { display: grid; grid-template-columns: 1.3fr 1fr; gap: 6px; margin-bottom: 12px; border-bottom: 2px solid #000; padding-bottom: 10px; font-size: 9px; }
-            .info-line { font-size: 9px; font-weight: bold; color: black; text-transform: uppercase; display: flex; margin-bottom: 2px; }
-            .info-label { width: 80px; flex-shrink: 0; }
-            .pdf-tolerance-box { background: #fafafa; border: 1px solid #000; padding: 8px; margin-bottom: 12px; text-align: center; -webkit-print-color-adjust: exact; }
-            .pdf-tolerance-box .tol-title { font-size: 8px; font-weight: bold; text-transform: uppercase; margin-bottom: 2px; }
-            .pdf-tolerance-box .tol-value { font-size: 12px; font-weight: 900; }
-            #print-summary { display: block !important; background: #fafafa; border: 1px solid #000; padding: 8px; margin-top: 15px; text-align: center; -webkit-print-color-adjust: exact; }
-            #print-summary .summary-title { font-size: 9px; font-weight: bold; text-transform: uppercase; margin-bottom: 4px; }
-            #print-summary .summary-result { font-size: 13px; font-weight: 900; }
-            #print-summary .summary-detail { font-size: 8px; color: #333; margin-top: 3px; }
-            .summary-pass { color: #006600 !important; }
-            .summary-fail { color: #cc0000 !important; }
-            .summary-neutral { color: #333 !important; }
-            #print-footer { display: block !important; margin-top: 20px; text-align: right; font-size: 8px; font-style: italic; border-top: 1px solid #ccc; padding-top: 6px; color: black !important; font-weight: bold; }
-            #installPWA { display: none !important; }
-        }
+  .row {
+    display: flex; justify-content: space-between;
+    font-size: 12px; padding: 8px 0; color: #767d88;
+  }
+  .row span:last-child {
+    font-family: "SF Mono", "JetBrains Mono", Consolas, monospace;
+    font-weight: 500; color: #c9cdd3;
+  }
+  .divider { height: 1px; background: #262a30; margin: 16px 0; }
 
-        .btn-print { width: 100%; padding: 16px; background: #1a3a2a; color: #4ade80; border: 2px solid #1a4a2a; border-radius: 14px; font-weight: 900; margin-top: 20px; cursor: pointer; letter-spacing: 2px; font-size: 12px; transition: all 0.2s; }
-        .btn-print:hover { background: #1a4a2a; }
-        .btn-clear { width: 100%; padding: 12px; background: none; color: #555; border: 1px solid #222; border-radius: 10px; margin-top: 8px; font-size: 10px; font-weight: bold; cursor: pointer; letter-spacing: 1px; }
-        .btn-clear:hover { color: #888; border-color: #444; }
-        .btn-reset-all { width: 100%; padding: 12px; background: none; color: #ff6b6b; border: 1px solid #ff3b30; border-radius: 10px; margin-top: 4px; font-size: 10px; font-weight: bold; cursor: pointer; letter-spacing: 1px; }
-        .btn-reset-all:hover { background: #1a0000; }
-        .validation-msg { color: var(--red); font-size: 9px; text-align: center; margin-top: 4px; display: none; }
-        .clamp-msg { color: #555; font-size: 8px; text-align: center; margin-top: 4px; letter-spacing: 1px; }
-    </style>
+  .big { text-align: center; padding: 8px 0 20px; }
+  .big .label {
+    font-size: 10px; color: #6b7280; letter-spacing: 2px;
+    text-transform: uppercase; margin-bottom: 10px; font-weight: 500;
+  }
+  .big .label.ref { color: #9bb094; }
+  .big .value {
+    font-family: "SF Mono", "JetBrains Mono", Consolas, monospace;
+    font-size: 40px; font-weight: 300; color: #eceef1;
+    line-height: 1; letter-spacing: -.5px; word-break: break-all;
+  }
+  .big .value.small { font-size: 30px; }
+  .big .value.ref { color: #b2c7ac; }
+
+  .akurasi-box { padding: 6px 0 0; }
+  .akurasi-head {
+    display: flex; justify-content: space-between;
+    align-items: baseline; margin-bottom: 10px;
+  }
+  .akurasi-head .t {
+    font-size: 10px; color: #767d88; letter-spacing: 1.5px;
+    text-transform: uppercase; font-weight: 500;
+  }
+  .akurasi-head .v {
+    font-family: "SF Mono", "JetBrains Mono", Consolas, monospace;
+    font-size: 20px; font-weight: 500; color: #eceef1;
+  }
+  .akurasi-head .v.ok   { color: #b2c7ac; }
+  .akurasi-head .v.warn { color: #d4bb8a; }
+  .akurasi-head .v.err  { color: #c99494; }
+
+  .bar { height: 3px; border-radius: 2px; background: #262a30; overflow: hidden; }
+  .bar > div {
+    height: 100%; border-radius: 2px;
+    transition: width .7s cubic-bezier(.4,0,.2,1);
+  }
+  .bar > div.ok   { background: #9bb094; }
+  .bar > div.warn { background: #d4bb8a; }
+  .bar > div.err  { background: #c99494; }
+
+  .note {
+    font-size: 10px; color: #3f444c; text-align: center;
+    margin-top: 22px; line-height: 1.6; letter-spacing: .3px;
+  }
+</style>
 </head>
 <body>
-<div class="container">
-    <div class="top-bar">
-        <div class="dept-title">ELECTRICAL & INSTRUMENT</div>
-        <div class="sub-dept">DEPARTMENT</div>
-        <div class="header-lightning">⚡</div>
-    </div>
-    <div class="content">
-        <div class="section-title">ADMINISTRATIVE INFO</div>
-        <input type="text" id="tech" placeholder="TECHNICIAN NAME" autocomplete="off" oninput="saveSettings()" style="margin-bottom:10px;">
-        <div class="row">
-            <div class="col"><input type="date" id="date" required autocomplete="off" onchange="saveSettings()"></div>
-            <div class="col"><input type="text" id="tag" placeholder="TAG NUMBER" autocomplete="off" oninput="saveSettings()"></div>
-        </div>
-        <div class="row">
-            <div class="col"><input type="text" id="sn" placeholder="SERIAL NUMBER" autocomplete="off" oninput="saveSettings()"></div>
-            <div class="col"><input type="text" id="area" placeholder="PLANT AREA" autocomplete="off" oninput="saveSettings()"></div>
-        </div>
 
-        <div class="section-title">CONFIGURATION</div>
-        <select id="vMode" autocomplete="off" onchange="chgMode()" style="margin-bottom:10px; border-left:4px solid var(--gold);">
-            <option value="ma">TRANSMITTER (4-20 mA)</option>
-            <option value="pt">RTD PT100 (CVD IEC 60751)</option>
-            <option value="tk">TC TYPE K (NIST ITS-90)</option>
-            <option value="ts">TC TYPE S (NIST ITS-90)</option>
-        </select>
-        <div class="row">
-            <div class="col"><label>LRV</label><input type="number" inputmode="decimal" id="lrv" autocomplete="off" oninput="upd();saveSettings()"></div>
-            <div class="col"><label>URV</label><input type="number" inputmode="decimal" id="urv" autocomplete="off" oninput="upd();saveSettings()"></div>
-            <div class="col"><label>UNIT</label><input type="text" id="unit" placeholder="bar" autocomplete="off" oninput="upd();updateTolUnitDisplay();saveSettings()" style="background:transparent!important; border:1px solid #222;"></div>
-        </div>
-        <div class="row" id="cjRow" style="display:none;">
-            <div class="col">
-                <label style="color:var(--orange);">🌡 COLD JUNCTION °C</label>
-                <input type="number" inputmode="decimal" id="coldJunction" value="25.0" step="0.1" autocomplete="off" oninput="upd();saveSettings()" style="border:1px solid var(--orange);">
-            </div>
-        </div>
-        <div id="validationMsg" class="validation-msg">⚠ URV harus lebih besar dari LRV</div>
+<div class="card">
+  <button class="info-btn" onclick="toggleModal()" title="Instruksi Best Practice">!</button>
 
-        <div class="section-title">TOLERANCE</div>
-        <div class="tol-selector-row">
-            <div class="tol-mode-btn active" id="tolModeNone" onclick="setTolMode('none')">🔍 VERIF ONLY</div>
-            <div class="tol-mode-btn" id="tolModeActive" onclick="setTolMode('active')">✅ TOLERANCE</div>
-        </div>
-        <div class="tol-input-row" id="tolInputRow" style="display:none;">
-            <div class="tol-input-col">
-                <label>TOLERANCE VALUE</label>
-                <input type="number" inputmode="decimal" id="tolValue" value="0.5" step="any" autocomplete="off" oninput="rebuildTable();saveSettings()">
-            </div>
-            <div class="tol-input-col">
-                <label>UNIT (AUTO)</label>
-                <div class="tol-unit-display" id="tolUnitDisplay">bar</div>
-            </div>
-        </div>
+  <h1>Kalkulator Koefisien</h1>
+  <p class="sub">Belt Scale · Span Correction</p>
 
-        <div class="section-title">ACTION</div>
-        <div class="work-zone">
-            <div class="state-row">
-                <div class="state-btn found-active" id="stateFound" onclick="setState('found')">🔍 AS FOUND</div>
-                <div class="state-btn" id="stateLeft" onclick="setState('left')">✅ AS LEFT</div>
-            </div>
-            <div class="direction-row">
-                <div class="dir-btn active" id="dirUp" onclick="setDir('up')">▲ UPSCALE</div>
-                <div class="dir-btn" id="dirDown" onclick="setDir('down')">▼ DOWNSCALE</div>
-            </div>
-            <label style="color:var(--gold); letter-spacing:2px;">INPUT REFERENCE</label>
-            <input type="number" inputmode="decimal" id="actIn" placeholder="0.00" autocomplete="off" style="border:2px solid var(--gold);" oninput="upd()">
-            <div class="ideal-display"><div id="maIdeal" class="ideal-val">---</div><div id="unitIdeal" style="font-size:10px; color:#555; letter-spacing:2px;"></div></div>
-            <label style="color:var(--blue); letter-spacing:2px;">MEASURED OUTPUT</label>
-            <input type="number" inputmode="decimal" id="maMeasured" placeholder="0.000" step="0.001" autocomplete="off" style="border:2px solid var(--blue);" oninput="convLive()">
-            <div id="convOut" style="text-align:center; color:var(--green); font-size:12px; margin-top:5px; font-weight:bold;"></div>
-            <div id="clampMsg" class="clamp-msg"></div>
-            <button class="btn-add" onclick="addLog()">✚ SAVE DATA POINT</button>
-            <button class="btn-auto" id="btnAuto" onclick="autoStep()">⚡ AUTO STEP (0%–100%)</button>
-        </div>
+  <label for="kLama">Koefisien Lama</label>
+  <input type="number" id="kLama" step="any" placeholder="1" value="1">
 
-        <div class="section-title">VERIFICATION LOG</div>
+  <label for="wAktual">Berat Aktual (kg)</label>
+  <input type="number" id="wAktual" step="any" placeholder="4000" value="4000">
 
-        <div id="print-header">
-            <div class="pdf-brand-box"><span class="dept">ELECTRICAL & INSTRUMENT</span><span class="sub">DEPARTMENT</span></div>
-            <div class="pdf-report-title">INSTRUMENT VERIFICATION REPORT</div>
-            <div class="pdf-info-container">
-                <div class="pdf-left">
-                    <div class="info-line"><span class="info-label">TECHNICIAN</span><span>: <span id="p-tech"></span></span></div>
-                    <div class="info-line"><span class="info-label">TAG NO</span><span>: <span id="p-tag"></span></span></div>
-                    <div class="info-line"><span class="info-label">SERIAL NO</span><span>: <span id="p-sn"></span></span></div>
-                </div>
-                <div class="pdf-right">
-                    <div class="info-line"><span class="info-label">DATE</span><span>: <span id="p-date"></span></span></div>
-                    <div class="info-line"><span class="info-label">PLANT AREA</span><span>: <span id="p-area"></span></span></div>
-                    <div class="info-line"><span class="info-label">RANGE</span><span>: <span id="p-range"></span></span></div>
-                </div>
-            </div>
-            <div class="pdf-tolerance-box">
-                <div class="tol-title">TOLERANCE LIMIT</div>
-                <div class="tol-value" id="p-tolerance"></div>
-            </div>
-        </div>
+  <label for="wDisplay">Berat Display (kg)</label>
+  <input type="number" id="wDisplay" step="any" placeholder="3700" value="3700">
 
-        <div class="chart-container" id="chartBox">
-            <canvas id="linearityChart" width="400" height="180"></canvas>
-            <div class="chart-legend">
-                <span><span class="legend-dash"></span> IDEAL</span>
-                <span><span class="legend-line-up"></span> UP ▲</span>
-                <span><span class="legend-line-down"></span> DOWN ▼</span>
-            </div>
-        </div>
+  <button class="calc-btn" onclick="hitung()">Hitung</button>
 
-        <div class="table-scroll">
-            <table id="mainTable">
-                <thead><tr>
-                    <th>DIR</th>
-                    <th id="th-in">INPUT</th><th id="th-meas">MEAS</th>
-                    <th id="th-pv">PV</th><th id="th-tar">TARGET</th>
-                    <th>ERR</th><th>STATUS</th>
-                    <th class="no-print">×</th>
-                </tr></thead>
-                <tbody id="logBody"></tbody>
-            </table>
-        </div>
+  <div class="result" id="result"></div>
 
-        <div id="print-summary">
-            <div class="summary-title">CALIBRATION SUMMARY</div>
-            <div class="summary-result" id="p-summary-result"></div>
-            <div class="summary-detail" id="p-summary-detail"></div>
-        </div>
+  <p class="note">
+    K<sub>baru</sub> = K<sub>lama</sub> × (Aktual ÷ Display)<br>
+    Standar pabrik ±0,5% s.d ±1%
+  </p>
+</div>
 
-        <div id="print-footer">Support by : E&I Cal.Team<sup style="font-size:7px;">™</sup></div>
-        <button class="btn-print no-print" onclick="savePdf()">📄 EXPORT TO PDF</button>
-        <button class="btn-clear no-print" onclick="clearLogs()">📋 RESET LOG ONLY</button>
-        <button class="btn-reset-all no-print" onclick="resetAllSettings()">🔄 RESET ALL SETTINGS</button>
-    </div>
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-title">Best Practice Lapangan</div>
+    <ul class="modal-list">
+      <li><b>Error &lt; 0.5%</b><br>Jangan diubah. Akurasi sudah baik, biarkan sistem stabil.</li>
+      <li><b>Error 0.5% – 1.5%</b><br>Boleh diubah, namun <b>wajib verifikasi</b> dengan penimbangan ke-2.</li>
+      <li><b>Error &gt; 1.5%</b><br><b>Langsung ubah</b>. Jangan tunggu sampel ke-2, error sudah terlalu besar.</li>
+    </ul>
+    <button class="modal-btn" onclick="toggleModal()">Mengerti</button>
+  </div>
 </div>
 
 <script>
-/* ═══════════════════════════════════════════════════════════════
-   PT100 - CALLENDAR-VAN DUSEN (IEC 60751)
-═══════════════════════════════════════════════════════════════ */
-const R0=100,A=3.9083e-3,B=-5.775e-7,C=-4.183e-12;
-function pt100_TtoR(T){if(T>=0)return R0*(1+A*T+B*T*T);return R0*(1+A*T+B*T*T+C*(T-100)*T*T*T);}
-function pt100_RtoT(R){if(R>=R0){const d=(R/R0)-1,dis=A*A+4*B*d;return(-A+Math.sqrt(dis))/(2*B);}let T=-50;for(let i=0;i<10;i++){const T100=T-100,f=R0*(1+A*T+B*T*T+C*T100*T*T*T)-R,df=R0*(A+2*B*T+C*T*T*(4*T-300));if(Math.abs(df)<1e-15)break;T-=f/df;if(Math.abs(f/df)<1e-12)break;}return T;}
-
-/* ═══════════════════════════════════════════════════════════════
-   TC TYPE K & S - NIST ITS-90 + CJC
-═══════════════════════════════════════════════════════════════ */
-const NKmV=[0,2.5173462e-2,-1.1662878e-6,-1.0833638e-9,-8.977354e-13,-3.7342377e-16,-8.6632643e-20,-1.0450598e-23,-5.1920577e-28,0];
-const NKlo=[0,3.9450128025e-2,2.3622373598e-5,-3.2858906784e-7,-4.9904828777e-9,-6.7509059173e-11,-5.7410327428e-13,-3.1088872894e-15,-1.0451609365e-17,-1.9889266878e-20,-1.6322697486e-23];
-const NKhi=[-1.7600413686e-2,3.8921204975e-2,1.8558770032e-5,-9.9457592874e-8,3.1840945719e-10,-5.6072844889e-13,5.6075059059e-16,-3.2020720003e-19,9.7151147152e-23,-1.2104721275e-26];
-const NSmV=[0,1.8494946e-2,-8.00504062e-6,1.0223743e-8,-1.52248592e-11,1.88821343e-14,-1.59085941e-17,8.2302788e-21,-2.34181944e-24,2.7978626e-28];
-const NSTmV=[0,5.40313308e-2,1.2593342e-5,-2.04405043e-8,3.17533172e-11,-4.68917176e-14,5.89025127e-17,-6.25331094e-20,5.74008144e-23,-4.47813056e-26];
-
-function tk_mVtoT_raw(mV){let T=0;for(let i=0;i<NKmV.length;i++)T+=NKmV[i]*Math.pow(mV,i);return T;}
-function tk_TtomV_raw(T){const c=T<0?NKlo:NKhi;let mV=0;for(let i=0;i<c.length;i++)mV+=c[i]*Math.pow(T,i);return mV;}
-function ts_mVtoT_raw(mV){let T=0;for(let i=0;i<NSmV.length;i++)T+=NSmV[i]*Math.pow(mV,i);return T;}
-function ts_TtomV_raw(T){let mV=0;for(let i=0;i<NSTmV.length;i++)mV+=NSTmV[i]*Math.pow(T,i);return mV;}
-
-function getCJ(){const m=$('vMode').value;if(m!=='tk'&&m!=='ts')return 0;const cj=parseFloat($('coldJunction')?.value);return isNaN(cj)?25:cj;}
-function tk_mVtoT(mV){const cj=getCJ(),mVcj=tk_TtomV_raw(cj);return tk_mVtoT_raw(mV+mVcj);}
-function tk_TtomV(T){const cj=getCJ(),mVcj=tk_TtomV_raw(cj);return tk_TtomV_raw(T)-mVcj;}
-function ts_mVtoT(mV){const cj=getCJ(),mVcj=ts_TtomV_raw(cj);return ts_mVtoT_raw(mV+mVcj);}
-function ts_TtomV(T){const cj=getCJ(),mVcj=ts_TtomV_raw(cj);return ts_TtomV_raw(T)-mVcj;}
-
-/* ═══════════════════════════════════════════════════════════════
-   HELPERS
-═══════════════════════════════════════════════════════════════ */
-const $=id=>document.getElementById(id);
-let currentDir='up',currentState='found',tolMode='none',logData=[];
-const clampMap={pt:{min:18,max:390,unit:'Ω'},tk:{min:-6.5,max:54.8,unit:'mV'},ts:{min:-0.236,max:18.693,unit:'mV'}};
-
-function setDir(d){currentDir=d;$('dirUp').classList.toggle('active',d==='up');$('dirDown').classList.toggle('active',d==='down');}
-function setState(s){currentState=s;$('stateFound').classList.toggle('found-active',s==='found');$('stateLeft').classList.toggle('active',s==='left');}
-
-function setTolMode(mode){
-    tolMode=mode;
-    $('tolModeNone').classList.toggle('active',mode==='none');
-    $('tolModeActive').classList.toggle('active',mode==='active');
-    $('tolInputRow').style.display=mode==='active'?'flex':'none';
-    $('tolValue').disabled=mode==='none';
-    updateTolUnitDisplay();
-    rebuildTable();
-    saveSettings();
+function toggleModal() {
+  const modal = document.getElementById('modal');
+  modal.classList.toggle('show');
+}
+function closeModal(e) {
+  if (e.target.id === 'modal') {
+    document.getElementById('modal').classList.remove('show');
+  }
 }
 
-function getTolValue(){if(tolMode==='none')return null;const v=parseFloat($('tolValue').value);return isNaN(v)||v<=0?null:v;}
-function getTolUnit(){return $('unit').value||'UNIT';}
-function updateTolUnitDisplay(){$('tolUnitDisplay').innerText=getTolUnit();}
-function getDispUnit(){return $('unit').value||'UNIT';}
+function hitung() {
+  const kLama    = parseFloat(document.getElementById('kLama').value);
+  const wAktual  = parseFloat(document.getElementById('wAktual').value);
+  const wDisplay = parseFloat(document.getElementById('wDisplay').value);
+  const el = document.getElementById('result');
 
-/* ═══════════════════════════════════════════════════════════════
-   LOCAL STORAGE
-═══════════════════════════════════════════════════════════════ */
-function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
-function lsGet(k,fb){try{const r=localStorage.getItem(k);if(r===null||r===undefined)return fb;const p=JSON.parse(r);return(p!==null&&p!==undefined)?p:fb;}catch(e){return fb;}}
+  if (isNaN(kLama) || isNaN(wAktual) || isNaN(wDisplay) || kLama <= 0 || wAktual <= 0 || wDisplay <= 0) {
+    el.className = 'result show';
+    el.innerHTML = `<div style="text-align:center;font-size:11px;color:#c99494;padding:8px 0;">Input tidak valid</div>`;
+    return;
+  }
 
-function saveSettings(){
-    lsSet('ei_v20_settings',{
-        lrv:$('lrv').value,urv:$('urv').value,unit:$('unit').value,
-        mode:$('vMode').value,tech:$('tech').value,tag:$('tag').value,
-        sn:$('sn').value,area:$('area').value,date:$('date').value,
-        cj:$('coldJunction')?.value||'25',tolMode:tolMode,tolValue:$('tolValue').value
-    });
+  const faktor    = wAktual / wDisplay;
+  const kBaru     = kLama * faktor;
+  const selisih   = wAktual - wDisplay;
+  const errorAktual   = Math.abs(selisih) / wAktual * 100;
+  const akurasiAktual = Math.max(0, 100 - errorAktual);
+
+  const kls = akurasiAktual >= 99.5 ? 'ok' : (akurasiAktual >= 99.0 ? 'warn' : 'err');
+  const isRef = akurasiAktual >= 99.5;
+
+  const labelText  = isRef ? 'Ref Koefisien Baru' : 'Koefisien Baru';
+  const labelClass = isRef ? 'ref' : '';
+  const valueClass = isRef ? 'ref' : '';
+
+  const fmt = (n, d=2) => n.toLocaleString('id-ID', {minimumFractionDigits: d, maximumFractionDigits: d});
+  const kBaruStr = Number(kBaru.toFixed(4)).toString();
+
+  el.className = 'result show';
+  el.innerHTML = `
+    <div class="row"><span>Koefisien Lama</span><span>${kLama}</span></div>
+    <div class="row"><span>Berat Aktual</span><span>${fmt(wAktual)} kg</span></div>
+    <div class="row"><span>Berat Display</span><span>${fmt(wDisplay)} kg</span></div>
+    <div class="row"><span>Selisih</span><span>${selisih > 0 ? '+' : ''}${fmt(selisih)} kg</span></div>
+    <div class="row"><span>Error Aktual</span><span>${fmt(errorAktual)}%</span></div>
+    <div class="row"><span>Akurasi Aktual</span><span>${fmt(akurasiAktual)}%</span></div>
+
+    <div class="divider"></div>
+
+    <div class="row"><span>Faktor Koreksi</span><span>${fmt(faktor, 4)}</span></div>
+
+    <div class="big">
+      <div class="label ${labelClass}">${labelText}</div>
+      <div class="value ${kBaruStr.length > 7 ? 'small' : ''} ${valueClass}">${kBaruStr}</div>
+    </div>
+
+    <div class="akurasi-box">
+      <div class="akurasi-head">
+        <span class="t">Akurasi</span>
+        <span class="v ${kls}">${fmt(akurasiAktual)}%</span>
+      </div>
+      <div class="bar"><div class="${kls}" style="width:${akurasiAktual}%"></div></div>
+    </div>
+  `;
 }
-
-function loadSettings(){
-    let s=lsGet('ei_v20_settings',{});if(!s||typeof s!=='object')s={};
-    $('tech').value=s.tech||'';$('tag').value=s.tag||'';$('sn').value=s.sn||'';
-    $('area').value=s.area||'';$('lrv').value=s.lrv||'';$('urv').value=s.urv||'';
-    $('unit').value=s.unit||'';$('vMode').value=s.mode||'ma';
-    if($('coldJunction'))$('coldJunction').value=s.cj||'25';
-    if(s.date)$('date').value=s.date;
-    if(s.tolValue!==undefined)$('tolValue').value=s.tolValue;
-    tolMode=s.tolMode||'none';setTolMode(tolMode);updateTolUnitDisplay();
-}
-
-function saveLogs(){lsSet('ei_v20_logs',logData);}
-function loadLogs(){logData=lsGet('ei_v20_logs',[]);rebuildTable();drawChart();}
-
-/* ═══════════════════════════════════════════════════════════════
-   RESET
-═══════════════════════════════════════════════════════════════ */
-function clearLogs(){
-    if(!confirm('Hapus semua data pengukuran?\n\nKonfigurasi akan TETAP disimpan.'))return;
-    logData=[];saveLogs();$('logBody').innerHTML='';
-    $('actIn').value='';$('maMeasured').value='';$('convOut').innerText='';
-    $('maIdeal').innerText='---';$('unitIdeal').innerText='';
-    autoStepActive=false;autoStepIdx=-1;resetAutoBtn();drawChart();
-}
-
-function resetAllSettings(){
-    if(!confirm('⚠️ Reset SEMUA data?\n\nTekan OK.'))return;
-    if(!confirm('🚨 KONFIRMASI TERAKHIR'))return;
-    try{localStorage.removeItem('ei_v20_settings');}catch(e){}
-    try{localStorage.removeItem('ei_v20_logs');}catch(e){}
-    ['tech','tag','sn','area','lrv','urv','unit','actIn','maMeasured'].forEach(id=>$(id).value='');
-    $('vMode').value='ma';if($('coldJunction'))$('coldJunction').value='25';
-    $('convOut').innerText='';$('maIdeal').innerText='---';$('unitIdeal').innerText='';
-    const today=new Date();$('date').value=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
-    currentDir='up';currentState='found';tolMode='none';$('tolValue').value='0.5';
-    $('dirUp').classList.add('active');$('dirDown').classList.remove('active');
-    $('stateFound').classList.add('found-active');$('stateLeft').classList.remove('active');
-    setTolMode('none');logData=[];$('logBody').innerHTML='';
-    autoStepActive=false;autoStepIdx=-1;resetAutoBtn();
-    $('validationMsg').style.display='none';
-    updateTolUnitDisplay();chgMode();drawChart();alert('✅ Semua data berhasil direset.');
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   TABLE
-═══════════════════════════════════════════════════════════════ */
-function rebuildTable(){$('logBody').innerHTML='';logData.forEach((l,idx)=>appendRow(l,idx));}
-
-function appendRow(l,idx){
-    const body=$('logBody'),row=body.insertRow(-1);
-    const tolVal=getTolValue(),errNum=parseFloat(l.err);
-    let status='-',statusClass='';
-    if(tolVal!==null){
-        const passed=Math.abs(errNum)<=tolVal;
-        status=passed?'✅ PASS':'❌ FAIL';statusClass=passed?'pass':'fail';
-    }
-    row.innerHTML=
-        `<td>${l.dir}</td><td>${l.act}</td><td>${parseFloat(l.meas).toFixed(3)}</td><td>${parseFloat(l.pv).toFixed(3)}</td><td>${parseFloat(l.target).toFixed(3)}</td>`+
-        `<td style="color:${tolVal!==null?(Math.abs(errNum)<=tolVal?'green':'red'):'#aaa'}">${l.err}%</td>`+
-        `<td class="${statusClass}">${status}</td>`+
-        `<td class="no-print"><button class="btn-del-box" onclick="deleteRow(${idx})">×</button></td>`;
-}
-
-function deleteRow(idx){logData.splice(idx,1);saveLogs();rebuildTable();drawChart();}
-
-/* ═══════════════════════════════════════════════════════════════
-   VALIDATION & SPAN
-═══════════════════════════════════════════════════════════════ */
-function validateRange(){const lrv=parseFloat($('lrv').value),urv=parseFloat($('urv').value);if(!isNaN(lrv)&&!isNaN(urv)&&urv<=lrv){$('validationMsg').style.display='block';return false;}$('validationMsg').style.display='none';return true;}
-function getSpan(){return(parseFloat($('urv').value)||0)-(parseFloat($('lrv').value)||0);}
-
-function chgMode(){
-    const m=$('vMode').value;$('cjRow').style.display=(m==='tk'||m==='ts')?'flex':'none';
-    $('clampMsg').innerText=getClampMsg();updateTolUnitDisplay();upd();drawChart();saveSettings();
-}
-
-function getClampMsg(){
-    const m=$('vMode').value,c=clampMap[m];
-    let msg=c?`Range sensor: ${c.min}–${c.max} ${c.unit}`:'';
-    if(m==='tk'||m==='ts')msg+=` | CJC: ${getCJ().toFixed(1)}°C`;
-    return msg;
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   CONVERSION ENGINE
-═══════════════════════════════════════════════════════════════ */
-function getTarget(act){
-    const m=$('vMode').value;
-    if(m==='ma'){const s=getSpan();if(s===0)return NaN;return((act-(parseFloat($('lrv').value)||0))/s)*16+4;}
-    if(m==='pt')return pt100_TtoR(act);if(m==='tk')return tk_TtomV(act);if(m==='ts')return ts_TtomV(act);
-    return NaN;
-}
-
-function getPV(meas){
-    const m=$('vMode').value;
-    if(m==='ma'){const lrv=parseFloat($('lrv').value)||0,s=getSpan();if(s===0)return NaN;return((meas-4)/16)*s+lrv;}
-    if(m==='pt')return pt100_RtoT(meas);if(m==='tk')return tk_mVtoT(meas);if(m==='ts')return ts_mVtoT(meas);
-    return NaN;
-}
-
-function upd(){
-    if(!validateRange()){$('maIdeal').innerText="ERR";return;}
-    const m=$('vMode').value,act=parseFloat($('actIn').value);
-    const unit=getDispUnit(),uOut=(m==='ma'?'mA':m==='pt'?'Ω':'mV');
-    $('th-in').innerText=`INPUT (${unit})`;$('th-meas').innerText=`MEAS (${uOut})`;
-    $('th-pv').innerText=`PV (${unit})`;$('th-tar').innerText=`TARGET (${uOut})`;
-    if(isNaN(act)){$('maIdeal').innerText="---";return;}
-    const ideal=getTarget(act);
-    if(isNaN(ideal)){$('maIdeal').innerText="ERR";return;}
-    $('maIdeal').innerText=ideal.toFixed(4);$('unitIdeal').innerText=uOut;convLive();
-}
-
-function convLive(){
-    const meas=parseFloat($('maMeasured').value),unit=getDispUnit();
-    if(isNaN(meas)){$('convOut').innerText="";return;}
-    const pv=getPV(meas);
-    $('convOut').innerText=!isNaN(pv)?"≈ "+pv.toFixed(3)+" "+unit:"";
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   ADD DATA POINT
-═══════════════════════════════════════════════════════════════ */
-function addLog(){
-    if(!validateRange()){alert("URV harus lebih besar dari LRV");return;}
-    const act=parseFloat($('actIn').value),meas=parseFloat($('maMeasured').value);
-    if(isNaN(act)||isNaN(meas))return;
-    const ideal=getTarget(act),pv=getPV(meas);
-    if(isNaN(ideal)||isNaN(pv))return;
-    const s=getSpan();if(s===0){alert("Span tidak boleh nol");return;}
-    const err=((pv-act)/s)*100;
-    logData.push({state:currentState==='found'?'AF':'AL',dir:currentDir==='up'?'▲':'▼',act:act,meas:meas.toFixed(4),pv:pv.toFixed(3),target:ideal.toFixed(4),err:err.toFixed(3)});
-    appendRow(logData[logData.length-1],logData.length-1);
-    $('actIn').value="";$('maMeasured').value="";$('convOut').innerText="";upd();saveLogs();drawChart();
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   AUTO STEP - DENGAN PENGAMAN (BEAMEX-STYLE)
-═══════════════════════════════════════════════════════════════ */
-const STEPS=[0,25,50,75,100];
-let autoStepIdx=-1,autoStepActive=false;
-
-function resetAutoBtn(){
-    const btn=$('btnAuto');
-    btn.innerText='⚡ AUTO STEP (0%–100%)';
-    btn.classList.remove('running');
-}
-
-function autoStep(){
-    // PENGAMAN 1: Cegah double run
-    if(autoStepActive){
-        alert('⚠️ Auto Step sedang berjalan. Selesaikan 0-100% terlebih dahulu.');
-        return;
-    }
-    
-    if(!validateRange()){alert("URV harus lebih besar dari LRV");return;}
-    
-    // PENGAMAN 2: Konfirmasi jika sudah ada data
-    if(logData.length > 0){
-        if(!confirm('⚠️ Data pengukuran sudah ada.\n\nAuto Step akan memulai input reference dari 0%.\nData yang sudah ada TIDAK akan dihapus.\n\nLanjutkan Auto Step?')){
-            return;
-        }
-    }
-    
-    const lrv=parseFloat($('lrv').value)||0,s=getSpan();
-    if(s===0){alert("Span tidak boleh nol");return;}
-    
-    autoStepIdx=0;
-    autoStepActive=true;
-    setAutoRef(lrv,s,0);
-}
-
-function setAutoRef(lrv,s,i){
-    const ref=lrv+(s*STEPS[i]/100);
-    $('actIn').value=ref;
-    $('maMeasured').value='';
-    $('convOut').innerText='';
-    upd();
-    
-    // Visual feedback
-    const btn=$('btnAuto');
-    btn.innerText=`⚡ AUTO STEP ${STEPS[i]}% (${i+1}/5)`;
-    btn.classList.add('running');
-    
-    $('maMeasured').focus();
-}
-
-// Event listener untuk AUTO STEP - lanjut ke step berikutnya setelah SAVE
-document.addEventListener('click',function(e){
-    if(!autoStepActive)return;
-    if(!e.target.classList.contains('btn-add'))return;
-    
-    const lrv=parseFloat($('lrv').value)||0,s=getSpan();
-    setTimeout(()=>{
-        autoStepIdx++;
-        if(autoStepIdx>=STEPS.length){
-            // SELESAI
-            autoStepActive=false;
-            autoStepIdx=-1;
-            resetAutoBtn();
-            return;
-        }
-        setAutoRef(lrv,s,autoStepIdx);
-    },350);
-},true);
-
-/* ═══════════════════════════════════════════════════════════════
-   CHART
-═══════════════════════════════════════════════════════════════ */
-let chartRaf=null;
-function drawChart(){if(chartRaf)cancelAnimationFrame(chartRaf);chartRaf=requestAnimationFrame(_drawChart);}
-function _drawChart(){
-    chartRaf=null;const cvs=$('linearityChart'),ctx=cvs.getContext('2d');
-    const w=cvs.width=cvs.offsetWidth||400,h=cvs.height=180;
-    const mrg={top:10,right:15,bottom:28,left:32},pw=w-mrg.left-mrg.right,ph=h-mrg.top-mrg.bottom;
-    ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);ctx.strokeStyle='#000';ctx.lineWidth=1.5;ctx.strokeRect(0,0,w,h);
-    ctx.strokeStyle='#ddd';ctx.lineWidth=0.5;
-    for(let i=0;i<=4;i++){const y=mrg.top+(ph/4)*i;ctx.beginPath();ctx.moveTo(mrg.left,y);ctx.lineTo(w-mrg.right,y);ctx.stroke();ctx.fillStyle='#333';ctx.font='bold 7px sans-serif';ctx.textAlign='right';ctx.fillText((100-i*25)+'%',mrg.left-4,y+3);}
-    for(let i=0;i<=4;i++){const x=mrg.left+(pw/4)*i;ctx.beginPath();ctx.moveTo(x,mrg.top);ctx.lineTo(x,h-mrg.bottom);ctx.stroke();ctx.fillStyle='#333';ctx.textAlign='center';ctx.fillText((25*i)+'%',x,h-6);}
-    ctx.strokeStyle='#000';ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(mrg.left,h-mrg.bottom);ctx.lineTo(w-mrg.right,h-mrg.bottom);ctx.stroke();ctx.beginPath();ctx.moveTo(mrg.left,mrg.top);ctx.lineTo(mrg.left,h-mrg.bottom);ctx.stroke();
-    ctx.strokeStyle='#00ff41';ctx.lineWidth=2;ctx.setLineDash([6,3]);ctx.beginPath();ctx.moveTo(mrg.left,h-mrg.bottom);ctx.lineTo(w-mrg.right,mrg.top);ctx.stroke();ctx.setLineDash([]);
-    const lrv=parseFloat($('lrv').value)||0,s=getSpan()||1;
-    const sorted=[...logData].sort((a,b)=>a.act-b.act),up=sorted.filter(d=>d.dir==='▲'),dn=sorted.filter(d=>d.dir==='▼');
-    const dl=(pts,cl)=>{if(pts.length<2)return;ctx.strokeStyle=cl;ctx.lineWidth=1.5;ctx.beginPath();pts.forEach((d,i)=>{const xp=(d.act-lrv)/s,yp=(parseFloat(d.pv)-lrv)/s;const x=mrg.left+Math.max(0,Math.min(1,xp))*pw,y=h-mrg.bottom-Math.max(0,Math.min(1,yp))*ph;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);});ctx.stroke();};
-    dl(up,'#00d4ff');dl(dn,'#ff3b30');
-    sorted.forEach(d=>{const xp=(d.act-lrv)/s,yp=(parseFloat(d.pv)-lrv)/s;const x=mrg.left+Math.max(0,Math.min(1,xp))*pw,y=h-mrg.bottom-Math.max(0,Math.min(1,yp))*ph;ctx.beginPath();ctx.arc(x,y,3.5,0,Math.PI*2);ctx.fillStyle=d.state==='AF'?'#ff9500':'#00ff41';ctx.fill();ctx.strokeStyle='#000';ctx.lineWidth=1;ctx.stroke();});
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   PDF / PRINT
-═══════════════════════════════════════════════════════════════ */
-function savePdf(){
-    $('p-tech').innerText=$('tech').value||"-";$('p-tag').innerText=$('tag').value||"-";
-    $('p-sn').innerText=$('sn').value||"-";$('p-area').innerText=$('area').value||"-";
-    $('p-range').innerText=($('lrv').value||"0")+" to "+($('urv').value||"0")+" "+($('unit').value||"");
-    const d=$('date').value;if(d){const[y,m,day]=d.split("-");$('p-date').innerText=`${day}-${m}-${y}`;}else{$('p-date').innerText="-";}
-    const tolVal=getTolValue(),tolUnit=getTolUnit();
-    if(tolVal!==null){$('p-tolerance').innerText=`± ${tolVal} ${tolUnit}`;$('p-tolerance').style.color='#000';}
-    else{$('p-tolerance').innerText='VERIFICATION ONLY';$('p-tolerance').style.color='#666';}
-    const total=logData.length;let pass=0;logData.forEach(l=>{if(tolVal!==null&&Math.abs(parseFloat(l.err))<=tolVal)pass++;});
-    if(total===0){$('p-summary-result').innerHTML='<span class="summary-neutral">NO DATA</span>';$('p-summary-detail').innerText='No verification points recorded.';}
-    else if(tolVal===null){$('p-summary-result').innerHTML='<span class="summary-neutral">VERIFICATION ONLY</span>';$('p-summary-detail').innerHTML=`<span class="summary-neutral">${total} points recorded (no tolerance)</span>`;}
-    else{const ok=pass===total,pct=Math.round((pass/total)*100);
-        $('p-summary-result').innerHTML=ok?'<span class="summary-pass">✅ PASSED</span>':'<span class="summary-fail">❌ FAILED</span>';
-        $('p-summary-detail').innerHTML=ok?`<span class="summary-pass">${pass}/${total} (${pct}%) within ±${tolVal} ${tolUnit}</span>`:`<span class="summary-fail">${pass}/${total} (${pct}%) — ${total-pass} out of tolerance ±${tolVal} ${tolUnit}</span>`;}
-    saveSettings();drawChart();window.print();
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   PWA INSTALL
-═══════════════════════════════════════════════════════════════ */
-let dp;
-window.addEventListener('beforeinstallprompt',e=>{
-    e.preventDefault();dp=e;if($('installPWA'))return;
-    const btn=document.createElement('button');btn.id='installPWA';btn.innerText='📲 INSTALL APP';
-    btn.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);padding:14px 22px;border:none;border-radius:14px;background:#d4af37;color:#000;font-weight:bold;z-index:99999;box-shadow:0 0 20px rgba(212,175,55,0.5);cursor:pointer;font-size:12px;letter-spacing:1px;';
-    document.body.appendChild(btn);
-    btn.addEventListener('click',async()=>{btn.remove();dp.prompt();await dp.userChoice;dp=null;});
-});
-window.addEventListener('appinstalled',()=>{const btn=$('installPWA');if(btn)btn.remove();dp=null;});
-
-/* ═══════════════════════════════════════════════════════════════
-   INIT
-═══════════════════════════════════════════════════════════════ */
-(function(){
-    const t=new Date();$('date').value=`${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
-    loadSettings();loadLogs();updateTolUnitDisplay();$('clampMsg').innerText=getClampMsg();
-})();
-window.addEventListener('beforeunload',()=>{saveSettings();saveLogs();});
-window.onload=()=>{chgMode();drawChart();};
-if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('./sw.js').then(r=>console.log('✅ SW:',r.scope)).catch(e=>console.log('❌ SW:',e));});}
 </script>
+
+<!-- === TAMBAHAN UNTUK PWA === -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js')
+        .then((reg) => console.log('Service Worker terdaftar:', reg.scope))
+        .catch((err) => console.log('Service Worker gagal:', err));
+    });
+  }
+</script>
+
 </body>
 </html>

@@ -1,49 +1,43 @@
-// E&I Mobile Calibration v20 - Service Worker
-const CACHE_NAME = 'ei-cal-v20';
+const CACHE_NAME = 'koef-belt-scale-v1';
 const ASSETS = [
   './',
   './index.html',
-  './manifest.json',
-  './icon-192.png',
-  './icon-512.png'
+  './manifest.json'
 ];
 
-// Install - Cache assets
+// Install Service Worker & Simpan File ke Cache
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
+      console.log('Menyimpan file ke cache...');
       return cache.addAll(ASSETS);
     })
   );
   self.skipWaiting();
 });
 
-// Activate - Clean old cache
+// Aktivasi & Hapus Cache Lama jika ada update
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) => {
+    caches.keys().then((cacheNames) => {
       return Promise.all(
-        keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
+        cacheNames.map((cache) => {
+          if (cache !== CACHE_NAME) {
+            console.log('Menghapus cache lama:', cache);
+            return caches.delete(cache);
+          }
+        })
       );
     })
   );
   self.clients.claim();
 });
 
-// Fetch - Cache first, fallback to network
+// Ambil dari Cache jika Offline, jika ada internet ambil dari Network
 self.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.match(event.request).then((cached) => {
-      return cached || fetch(event.request).then((response) => {
-        // Cache new requests
-        if (response && response.status === 200) {
-          const responseClone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseClone);
-          });
-        }
-        return response;
-      });
+    caches.match(event.request).then((response) => {
+      return response || fetch(event.request);
     })
   );
 });
