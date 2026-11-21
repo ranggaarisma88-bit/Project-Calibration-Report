@@ -6,7 +6,6 @@
 <meta name="theme-color" content="#1a1c20">
 <title>Kalkulator Koefisien Belt Scale</title>
 
-<!-- === TAMBAHAN UNTUK PWA === -->
 <link rel="manifest" href="manifest.json">
 
 <style>
@@ -141,8 +140,15 @@
   }
   input::placeholder { color: #3f444c; }
 
+  /* === TOMBOL AKSI (HITUNG & HAPUS) === */
+  .action-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 26px;
+  }
   button.calc-btn {
-    width: 100%; padding: 14px; margin-top: 26px;
+    flex: 2; /* Tombol hitung lebih lebar */
+    padding: 14px;
     font-size: 12px; font-weight: 600; letter-spacing: 2px;
     text-transform: uppercase; color: #1a1c20;
     background: #c9cdd3; border: none; border-radius: 9px; cursor: pointer;
@@ -150,6 +156,23 @@
   }
   button.calc-btn:hover { background: #eceef1; }
   button.calc-btn:active { transform: scale(.99); }
+
+  button.reset-btn {
+    flex: 1; /* Tombol hapus lebih kecil */
+    padding: 14px;
+    font-size: 12px; font-weight: 600; letter-spacing: 1px;
+    text-transform: uppercase; color: #8b93a1;
+    background: transparent; 
+    border: 1px solid #4a5058; 
+    border-radius: 9px; cursor: pointer;
+    transition: all .2s;
+  }
+  button.reset-btn:hover { 
+    color: #eceef1; 
+    border-color: #8b93a1; 
+    background: rgba(255,255,255,.03);
+  }
+  button.reset-btn:active { transform: scale(.99); }
 
   .result { margin-top: 22px; display: none; }
   .result.show { display: block; animation: fade .35s ease; }
@@ -228,7 +251,11 @@
   <label for="wDisplay">Berat Display (kg)</label>
   <input type="number" id="wDisplay" step="any" placeholder="3700" value="3700">
 
-  <button class="calc-btn" onclick="hitung()">Hitung</button>
+  <!-- PEMBUNGKUS TOMBOL -->
+  <div class="action-group">
+    <button class="calc-btn" onclick="hitung()">Hitung</button>
+    <button class="reset-btn" onclick="resetForm()">Hapus</button>
+  </div>
 
   <div class="result" id="result"></div>
 
@@ -259,6 +286,22 @@ function closeModal(e) {
   if (e.target.id === 'modal') {
     document.getElementById('modal').classList.remove('show');
   }
+}
+
+// === FUNGSI HAPUS / RESET ===
+function resetForm() {
+  // Kosongkan inputan (atau kembalikan ke nilai default tertentu)
+  document.getElementById('kLama').value = '';
+  document.getElementById('wAktual').value = '';
+  document.getElementById('wDisplay').value = '';
+  
+  // Sembunyikan hasil
+  const el = document.getElementById('result');
+  el.classList.remove('show');
+  el.innerHTML = '';
+  
+  // Fokuskan kursor kembali ke input pertama
+  document.getElementById('kLama').focus();
 }
 
 function hitung() {
@@ -318,7 +361,6 @@ function hitung() {
 }
 </script>
 
-<!-- === TAMBAHAN UNTUK PWA === -->
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
