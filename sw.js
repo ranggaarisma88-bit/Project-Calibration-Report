@@ -1,43 +1,54 @@
-const CACHE_NAME = 'koef-belt-scale-v3';
+const CACHE_NAME = 'koef-belt-scale-v6';
 const ASSETS = [
   './',
   './index.html',
-  './manifest.json'
+  './manifest.json',
+  './icon-192.png', // Pastikan file ini ada di server
+  './icon-512.png'  // Pastikan file ini ada di server
 ];
 
-// Install Service Worker & Simpan File ke Cache
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      console.log('Menyimpan file ke cache...');
-      return cache.addAll(ASSETS);
-    })
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
   );
   self.skipWaiting();
 });
 
-// Aktivasi & Hapus Cache Lama jika ada update
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cache) => {
-          if (cache !== CACHE_NAME) {
-            console.log('Menghapus cache lama:', cache);
-            return caches.delete(cache);
-          }
-        })
-      );
-    })
+    caches.keys().then((cacheNames) =>
+      Promise.all(
+        cacheNames
+          .filter((cache) => cache !== CACHE_NAME)
+          .map((cache) => caches.delete(cache))
+      )
+    )
   );
   self.clients.claim();
 });
 
-// Ambil dari Cache jika Offline, jika ada internet ambil dari Network
 self.addEventListener('fetch', (event) => {
+  // Abaikan request non-GET dan non-HTTP(S) (misal chrome-extension://)
+  if (event.request.method !== 'GET' || !event.request.url.startsWith('http')) {
+    return;
+  }
+
+  // Stale-While-Revalidate:
+  // Buka instan dari cache, sekaligus update cache di background jika ada internet
   event.respondWith(
-    caches.match(event.request).then((response) => {
-      return response || fetch(event.request);
-    })
+    caches.open(CACHE_NAME).then((cache) =>
+      cache.match(event.request, { ignoreSearch: true }).then((cachedResponse) => {
+        const networkFetch = fetch(event.request)
+          .then((networkResponse) => {
+            if (networkResponse && networkResponse.status === 200) {
+              cache.put(event.request, networkResponse.clone());
+            }
+            return networkResponse;
+          })
+          .catch(() => cachedResponse);
+
+        return cachedResponse || networkFetch;
+      })
+    )
   );
 });

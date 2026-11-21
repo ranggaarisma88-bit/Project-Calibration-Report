@@ -4,9 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#1a1c20">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Kalkulator Koefisien Belt Scale</title>
 
 <link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
 
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -25,31 +28,31 @@
     background: #202329;
     border: 1px solid #2b2f36;
     border-radius: 16px;
-    padding: 28px 26px;
+    padding: 28px 22px;
     width: 100%;
-    max-width: 420px;
+    max-width: 440px;
     box-shadow: 0 30px 70px rgba(0,0,0,.45);
     position: relative;
   }
 
   .info-btn {
     position: absolute;
-    top: 18px;
-    right: 18px;
-    width: 22px;
-    height: 22px;
+    top: 16px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     background: transparent;
     border: 1px solid #4a5058;
     color: #8b93a1;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: all .2s;
-    font-family: "SF Mono", monospace;
+    font-family: Georgia, serif;
   }
   .info-btn:hover {
     border-color: #b8a888;
@@ -58,7 +61,7 @@
   }
 
   .modal-overlay {
-    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    position: fixed; inset: 0;
     background: rgba(10, 11, 14, 0.75);
     backdrop-filter: blur(3px);
     display: flex;
@@ -88,11 +91,11 @@
   }
   .modal-title::before {
     content: "i"; display: inline-flex;
-    width: 16px; height: 16px; border-radius: 50%;
+    width: 18px; height: 18px; border-radius: 50%;
     background: #b8a888; color: #1a1c20;
-    font-size: 10px; font-weight: 800;
+    font-size: 11px; font-weight: 800;
     align-items: center; justify-content: center;
-    font-family: serif;
+    font-family: Georgia, serif;
   }
   .modal-list {
     list-style: none;
@@ -104,9 +107,9 @@
   }
   .modal-list li:last-child { border-bottom: none; }
   .modal-list b { color: #c9cdd3; font-weight: 600; }
-  
+
   .modal-btn {
-    margin-top: 18px; width: 100%; padding: 10px;
+    margin-top: 18px; width: 100%; padding: 11px;
     font-size: 11px; font-weight: 600; letter-spacing: 1px;
     text-transform: uppercase; color: #1a1c20;
     background: #c9cdd3; border: none; border-radius: 7px;
@@ -119,40 +122,137 @@
     color: #eceef1; letter-spacing: .3px; margin-bottom: 4px;
   }
   .sub {
-    text-align: center; font-size: 10px; color: #6b7280;
-    letter-spacing: 2px; text-transform: uppercase; margin-bottom: 26px;
+    text-align: center; font-size: 10px; color: #767d88;
+    letter-spacing: 1.8px; text-transform: uppercase; margin-bottom: 18px;
   }
+
+  .top-meta-grid {
+    display: grid;
+    grid-template-columns: 1.45fr 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .test-block {
+    background: #17191d;
+    border: 1px solid #2b2f36;
+    border-radius: 11px;
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+  .test-block.hidden { display: none; }
+
+  .test-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 11px;
+    gap: 8px;
+  }
+  .test-title {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: #b8a888;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .mini-actions {
+    display: flex;
+    gap: 5px;
+    flex-wrap: nowrap;
+    align-items: center;
+  }
+  .mini-btn {
+    font-size: 10px;
+    padding: 4px 7px;
+    border-radius: 5px;
+    border: 1px solid #3a3f47;
+    background: #202329;
+    color: #9aa2b0;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all .2s;
+  }
+  .mini-btn:hover { border-color: #b8a888; color: #eceef1; }
+  .mini-btn.del { padding: 4px 8px; }
+  .mini-btn.del:hover { border-color: #c99494; color: #c99494; }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .grid-2 .full { grid-column: 1 / -1; }
+
   label {
-    display: block; font-size: 10px; font-weight: 500;
-    color: #767d88; letter-spacing: 1.2px; text-transform: uppercase;
-    margin-bottom: 7px; margin-top: 16px;
+    display: block; font-size: 9.5px; font-weight: 500;
+    color: #8b93a1; letter-spacing: .8px; text-transform: uppercase;
+    margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
   input {
-    width: 100%; padding: 13px 14px; font-size: 16px;
+    width: 100%; padding: 11px 12px; font-size: 15px;
     font-family: "SF Mono", "JetBrains Mono", Consolas, monospace;
     color: #eceef1; font-weight: 500;
-    background: #17191d; border: 1px solid #2b2f36;
-    border-radius: 9px; outline: none; transition: border .2s, box-shadow .2s;
+    background: #202329; border: 1px solid #2b2f36;
+    border-radius: 8px; outline: none; transition: border .2s, box-shadow .2s;
+  }
+  input.top-input {
+    background: #17191d;
+  }
+  input.tag-text {
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    letter-spacing: .3px;
   }
   input:focus {
     border-color: #b8a888;
     box-shadow: 0 0 0 3px rgba(184,168,136,.08);
   }
-  
-  /* Menghilangkan spinner panah atas/bawah di input number (opsional, biar lebih bersih) */
   input::-webkit-outer-spin-button,
-  input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+  input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  input[type=number] { -moz-appearance: textfield; }
+
+  .live-diff {
+    margin-top: 9px;
+    padding-top: 8px;
+    border-top: 1px dashed #262a30;
+    display: none;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "SF Mono", "JetBrains Mono", Consolas, monospace;
+    font-size: 11px;
+    color: #8b93a1;
   }
-  input[type=number] {
-    -moz-appearance: textfield;
+  .live-diff.show { display: flex; }
+
+  .add-test-btn {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #9aa2b0;
+    background: transparent;
+    border: 1px dashed #3a3f47;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all .2s;
   }
+  .add-test-btn:hover {
+    border-color: #b8a888;
+    color: #b8a888;
+    background: rgba(184,168,136,.04);
+  }
+  .add-test-btn.hidden { display: none; }
 
   .action-group {
     display: flex;
     gap: 10px;
-    margin-top: 26px;
+    margin-top: 14px;
   }
   button.calc-btn {
     flex: 2;
@@ -170,64 +270,165 @@
     padding: 14px;
     font-size: 12px; font-weight: 600; letter-spacing: 1px;
     text-transform: uppercase; color: #8b93a1;
-    background: transparent; 
-    border: 1px solid #4a5058; 
+    background: transparent;
+    border: 1px solid #4a5058;
     border-radius: 9px; cursor: pointer;
     transition: all .2s;
   }
-  button.reset-btn:hover { 
-    color: #eceef1; 
-    border-color: #8b93a1; 
+  button.reset-btn:hover {
+    color: #eceef1;
+    border-color: #8b93a1;
     background: rgba(255,255,255,.03);
   }
-  button.reset-btn:active { transform: scale(.99); }
 
   .result { margin-top: 22px; display: none; }
   .result.show { display: block; animation: fade .35s ease; }
   @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
+  .test-res-item {
+    background: #17191d;
+    border: 1px solid #262a30;
+    border-radius: 10px;
+    padding: 11px 12px;
+    margin-bottom: 9px;
+  }
+  .test-res-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: #eceef1;
+    margin-bottom: 8px;
+  }
+  .test-res-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed #262a30;
+  }
+  .test-res-cell .k {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: .7px;
+    color: #767d88;
+    margin-bottom: 2px;
+  }
+  .test-res-cell .v {
+    font-family: "SF Mono", "JetBrains Mono", Consolas, monospace;
+    font-size: 11.5px;
+    color: #c9cdd3;
+    font-weight: 500;
+  }
+  .test-res-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 8px;
+    font-family: "SF Mono", "JetBrains Mono", Consolas, monospace;
+    font-size: 11px;
+    color: #8b93a1;
+    gap: 8px;
+  }
+  .test-res-foot b { color: #eceef1; }
+
+  .c-ok   { color: #b2c7ac; }
+  .c-warn { color: #d4bb8a; }
+  .c-err  { color: #c99494; }
+
   .row {
     display: flex; justify-content: space-between;
-    font-size: 12px; padding: 8px 0; color: #767d88;
+    font-size: 12px; padding: 6px 0; color: #8b93a1;
   }
   .row span:last-child {
     font-family: "SF Mono", "JetBrains Mono", Consolas, monospace;
     font-weight: 500; color: #c9cdd3;
   }
-  .divider { height: 1px; background: #262a30; margin: 16px 0; }
+  .divider { height: 1px; background: #262a30; margin: 14px 0; }
 
-  .big { text-align: center; padding: 8px 0 20px; }
+  .big { text-align: center; padding: 8px 0 14px; }
   .big .label {
-    font-size: 10px; color: #6b7280; letter-spacing: 2px;
+    font-size: 10px; color: #767d88; letter-spacing: 1.8px;
     text-transform: uppercase; margin-bottom: 10px; font-weight: 500;
   }
   .big .label.ref { color: #9bb094; }
   .big .value {
     font-family: "SF Mono", "JetBrains Mono", Consolas, monospace;
-    font-size: 40px; font-weight: 300; color: #eceef1;
+    font-size: 38px; font-weight: 300; color: #eceef1;
     line-height: 1; letter-spacing: -.5px; word-break: break-all;
   }
-  .big .value.small { font-size: 30px; }
+  .big .value.small { font-size: 28px; }
   .big .value.ref { color: #b2c7ac; }
+  .sub-ref {
+    margin-top: 8px;
+    font-size: 11px;
+    color: #767d88;
+    font-family: "SF Mono", Consolas, monospace;
+  }
 
-  .akurasi-box { padding: 6px 0 0; }
+  .result-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 14px;
+  }
+  .copy-btn {
+    padding: 7px 14px;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: .8px;
+    text-transform: uppercase;
+    color: #c9cdd3;
+    background: #17191d;
+    border: 1px solid #3a3f47;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .copy-btn:hover { border-color: #b8a888; color: #eceef1; }
+  .copy-btn.jpg-btn {
+    border-color: rgba(184,168,136,.5);
+    color: #b8a888;
+  }
+  .copy-btn.jpg-btn:hover {
+    background: rgba(184,168,136,.12);
+    border-color: #b8a888;
+    color: #eceef1;
+  }
+
+  .badge {
+    display: inline-block;
+    font-size: 10.5px;
+    padding: 4px 10px;
+    border-radius: 99px;
+    font-weight: 600;
+    letter-spacing: .3px;
+    margin-top: 12px;
+  }
+  .badge.ok   { background: rgba(155,176,148,.14); color: #b2c7ac; }
+  .badge.warn { background: rgba(212,187,138,.14); color: #d4bb8a; }
+  .badge.err  { background: rgba(201,148,148,.14); color: #c99494; }
+
+  .akurasi-box { padding: 8px 0 0; }
   .akurasi-head {
     display: flex; justify-content: space-between;
-    align-items: baseline; margin-bottom: 10px;
+    align-items: baseline; margin-bottom: 8px;
   }
   .akurasi-head .t {
-    font-size: 10px; color: #767d88; letter-spacing: 1.5px;
+    font-size: 10px; color: #8b93a1; letter-spacing: 1.5px;
     text-transform: uppercase; font-weight: 500;
   }
   .akurasi-head .v {
     font-family: "SF Mono", "JetBrains Mono", Consolas, monospace;
-    font-size: 20px; font-weight: 500; color: #eceef1;
+    font-size: 18px; font-weight: 500; color: #eceef1;
   }
   .akurasi-head .v.ok   { color: #b2c7ac; }
   .akurasi-head .v.warn { color: #d4bb8a; }
   .akurasi-head .v.err  { color: #c99494; }
 
-  .bar { height: 3px; border-radius: 2px; background: #262a30; overflow: hidden; }
+  .bar { height: 4px; border-radius: 2px; background: #262a30; overflow: hidden; }
   .bar > div {
     height: 100%; border-radius: 2px;
     transition: width .7s cubic-bezier(.4,0,.2,1);
@@ -237,165 +438,871 @@
   .bar > div.err  { background: #c99494; }
 
   .note {
-    font-size: 10px; color: #3f444c; text-align: center;
-    margin-top: 22px; line-height: 1.6; letter-spacing: .3px;
+    font-size: 10.5px; color: #767d88; text-align: center;
+    margin-top: 22px; line-height: 1.6; letter-spacing: .2px;
   }
 </style>
 </head>
 <body>
 
 <div class="card">
-  <button class="info-btn" onclick="toggleModal()" title="Instruksi Best Practice">!</button>
+  <button type="button" class="info-btn" onclick="toggleModal()" aria-label="Instruksi Best Practice" title="Instruksi Best Practice">i</button>
 
   <h1>Kalkulator Koefisien</h1>
   <p class="sub">Belt Scale · Span Correction</p>
 
-  <!-- PLACEHOLDER SUDAH DIHAPUS -->
-  <label for="kLama">Koefisien Lama</label>
-  <input type="number" id="kLama" step="any" oninput="simpanData()">
+  <form onsubmit="event.preventDefault(); hitung();">
+    <!-- TAG ID & TOLERANSI -->
+    <div class="top-meta-grid">
+      <div>
+        <label for="tagId">Tag ID (Opsional)</label>
+        <input type="text" id="tagId" class="top-input tag-text" maxlength="32" oninput="onInputChange()">
+      </div>
+      <div>
+        <label for="tolInput">Toleransi (±%)</label>
+        <input type="number" id="tolInput" class="top-input" value="0.5" step="any" inputmode="decimal" oninput="onInputChange()">
+      </div>
+    </div>
 
-  <label for="wAktual">Berat Aktual (kg)</label>
-  <input type="number" id="wAktual" step="any" oninput="simpanData()">
+    <!-- PENGETESAN 1 -->
+    <div class="test-block" id="tes1">
+      <div class="test-head">
+        <span class="test-title">Pengetesan 1</span>
+        <div class="mini-actions">
+          <button type="button" class="mini-btn" onclick="isiDefaultK1()">Init = 1</button>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="full">
+          <label for="k1">Koefisien Lama (K1)</label>
+          <input type="number" id="k1" step="any" inputmode="decimal" oninput="onInputChange()">
+        </div>
+        <div>
+          <label for="a1">Berat Aktual (kg)</label>
+          <input type="number" id="a1" step="any" inputmode="decimal" oninput="onInputChange()">
+        </div>
+        <div>
+          <label for="d1">Berat Display (kg)</label>
+          <input type="number" id="d1" step="any" inputmode="decimal" oninput="onInputChange()">
+        </div>
+      </div>
+      <div class="live-diff" id="live1"></div>
+    </div>
 
-  <label for="wDisplay">Berat Display (kg)</label>
-  <input type="number" id="wDisplay" step="any" oninput="simpanData()">
+    <!-- PENGETESAN 2 (OPSIONAL) -->
+    <div class="test-block hidden" id="tes2">
+      <div class="test-head">
+        <span class="test-title">Pengetesan 2</span>
+        <div class="mini-actions">
+          <button type="button" class="mini-btn" onclick="salinK(2, 'awal')">= K1</button>
+          <button type="button" class="mini-btn" onclick="salinK(2, 'hasil')">Hasil 1</button>
+          <button type="button" class="mini-btn del" onclick="hapusTes(2)" title="Tutup Pengetesan 2">✕</button>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="full">
+          <label for="k2">Koefisien Lama (K2)</label>
+          <input type="number" id="k2" step="any" inputmode="decimal" oninput="onInputChange()">
+        </div>
+        <div>
+          <label for="a2">Berat Aktual (kg)</label>
+          <input type="number" id="a2" step="any" inputmode="decimal" oninput="onInputChange()">
+        </div>
+        <div>
+          <label for="d2">Berat Display (kg)</label>
+          <input type="number" id="d2" step="any" inputmode="decimal" oninput="onInputChange()">
+        </div>
+      </div>
+      <div class="live-diff" id="live2"></div>
+    </div>
 
-  <div class="action-group">
-    <button class="calc-btn" onclick="hitung()">Hitung</button>
-    <button class="reset-btn" onclick="resetForm()">Hapus</button>
-  </div>
+    <!-- PENGETESAN 3 (OPSIONAL) -->
+    <div class="test-block hidden" id="tes3">
+      <div class="test-head">
+        <span class="test-title">Pengetesan 3</span>
+        <div class="mini-actions">
+          <button type="button" class="mini-btn" onclick="salinK(3, 'awal')">= K1</button>
+          <button type="button" class="mini-btn" onclick="salinK(3, 'hasil')">Hasil 2</button>
+          <button type="button" class="mini-btn del" onclick="hapusTes(3)" title="Tutup Pengetesan 3">✕</button>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="full">
+          <label for="k3">Koefisien Lama (K3)</label>
+          <input type="number" id="k3" step="any" inputmode="decimal" oninput="onInputChange()">
+        </div>
+        <div>
+          <label for="a3">Berat Aktual (kg)</label>
+          <input type="number" id="a3" step="any" inputmode="decimal" oninput="onInputChange()">
+        </div>
+        <div>
+          <label for="d3">Berat Display (kg)</label>
+          <input type="number" id="d3" step="any" inputmode="decimal" oninput="onInputChange()">
+        </div>
+      </div>
+      <div class="live-diff" id="live3"></div>
+    </div>
+
+    <button type="button" class="add-test-btn" id="addTestBtn" onclick="tambahTes()">+ Tambah Pengetesan 2</button>
+
+    <div class="action-group">
+      <button type="submit" class="calc-btn">Hitung</button>
+      <button type="button" class="reset-btn" onclick="resetForm()">Hapus</button>
+    </div>
+  </form>
 
   <div class="result" id="result"></div>
 
   <p class="note">
-    K<sub>baru</sub> = K<sub>lama</sub> × (Aktual ÷ Display)<br>
-    Standar pabrik ±0,5% s.d ±1%
+    K<sub>baru</sub> = K<sub>lama</sub> × (Aktual ÷ Display) · Awal = 1,000<br>
+    Selisih = Display − Aktual (kg)<br>
+    Standar pabrik umumnya ±0,5% s.d ±1% (sesuai kebutuhan)
   </p>
 </div>
 
-<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+<div class="modal-overlay" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" onclick="closeModal(event)">
   <div class="modal-box" onclick="event.stopPropagation()">
-    <div class="modal-title">Best Practice Lapangan</div>
-    <ul class="modal-list">
-      <li><b>Error &lt; 0.5%</b><br>Jangan diubah. Akurasi sudah baik, biarkan sistem stabil.</li>
-      <li><b>Error 0.5% – 1.5%</b><br>Boleh diubah, namun <b>wajib verifikasi</b> dengan penimbangan ke-2.</li>
-      <li><b>Error &gt; 1.5%</b><br><b>Langsung ubah</b>. Jangan tunggu sampel ke-2, error sudah terlalu besar.</li>
-    </ul>
-    <button class="modal-btn" onclick="toggleModal()">Mengerti</button>
+    <div class="modal-title" id="modalTitle">Best Practice Lapangan</div>
+    <ul class="modal-list" id="modalList"></ul>
+    <button type="button" class="modal-btn" onclick="toggleModal()">Mengerti</button>
   </div>
 </div>
 
 <script>
+const STORAGE_KEY = 'kalkulatorCoefMatData';
+const FIELDS = ['tagId', 'tolInput', 'k1', 'a1', 'd1', 'k2', 'a2', 'd2', 'k3', 'a3', 'd3'];
+let lastReportData = null;
+
+function getTol() {
+  const raw = document.getElementById('tolInput').value.trim();
+  if (!raw) return 0.5;
+  const val = parseFloat(raw);
+  if (isNaN(val) || val <= 0 || val >= 50) return null;
+  return val;
+}
+
+function getWarnMax(tol) {
+  return Number(Math.min(tol * 3, tol + 1).toFixed(2));
+}
+
+function fmtPctClean(n) {
+  const r = Number(n.toFixed(2));
+  const isInt = Math.abs(r - Math.round(r)) < 1e-6;
+  return r.toLocaleString('id-ID', {
+    minimumFractionDigits: isInt ? 0 : 1,
+    maximumFractionDigits: 2
+  });
+}
+
+function updateModalInfo() {
+  const tol = getTol() || 0.5;
+  const warnMax = getWarnMax(tol);
+  const tStr = fmtPctClean(tol);
+  const wStr = fmtPctClean(warnMax);
+
+  document.getElementById('modalList').innerHTML = `
+    <li><b>Deviasi &lt; ${tStr}%</b><br>Jangan diubah. Akurasi masuk target toleransi (±${tStr}%), biarkan sistem stabil.</li>
+    <li><b>Deviasi ${tStr}% – ${wStr}%</b><br>Update ke koefisien baru, lalu <b>wajib verifikasi</b> dengan penimbangan berikutnya.</li>
+    <li><b>Deviasi &gt; ${wStr}%</b><br><b>Langsung ubah</b> koefisien di indikator, lalu lakukan pengetesan ulang.</li>
+  `;
+}
+
 function toggleModal() {
-  const modal = document.getElementById('modal');
-  modal.classList.toggle('show');
+  updateModalInfo();
+  document.getElementById('modal').classList.toggle('show');
 }
 function closeModal(e) {
   if (e.target.id === 'modal') {
     document.getElementById('modal').classList.remove('show');
   }
 }
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    document.getElementById('modal').classList.remove('show');
+  }
+});
 
-// === FITUR SIMPAN DATA OTOMATIS (LOCAL STORAGE) ===
+function formatCoef3(val) {
+  if (!isFinite(val)) return '0.000';
+  return Math.abs(val) < 0.1 ? val.toFixed(4) : val.toFixed(3);
+}
+
+function fmtId(n, minDec = 0, maxDec = 2) {
+  return n.toLocaleString('id-ID', {
+    minimumFractionDigits: minDec,
+    maximumFractionDigits: maxDec
+  });
+}
+
+function fmtKg(n) {
+  const rounded = Number(n.toFixed(2));
+  const isInt = Math.abs(rounded - Math.round(rounded)) < 1e-6;
+  return fmtId(rounded, isInt ? 0 : 1, 2);
+}
+
+function getStatus(errPct, tol) {
+  const warnMax = getWarnMax(tol);
+  const tStr = fmtPctClean(tol);
+  const wStr = fmtPctClean(warnMax);
+
+  if (errPct < tol)      return { kls: 'ok',   teks: `Deviasi < ${tStr}% · Pertahankan Koefisien Lama` };
+  if (errPct <= warnMax) return { kls: 'warn', teks: `Deviasi ${tStr}–${wStr}% · Ubah & Verifikasi Ulang` };
+  return { kls: 'err', teks: `Deviasi > ${wStr}% · Wajib Ubah Koefisien` };
+}
+
+function onInputChange() {
+  simpanData();
+  updateLivePreview();
+}
+
+function updateLivePreview() {
+  const tol = getTol() || 0.5;
+  for (let i = 1; i <= 3; i++) {
+    const box = document.getElementById(`live${i}`);
+    const a = parseFloat(document.getElementById(`a${i}`).value);
+    const d = parseFloat(document.getElementById(`d${i}`).value);
+    if (a > 0 && d > 0) {
+      const selisih = d - a;
+      const errPct = Math.abs(selisih) / a * 100;
+      const st = getStatus(errPct, tol);
+      const tanda = selisih > 0 ? '+' : '';
+      const ket = selisih > 0 ? 'Lebih' : (selisih < 0 ? 'Kurang' : 'Pas');
+      box.className = 'live-diff show';
+      box.innerHTML = `
+        <span>Selisih: <b class="c-${st.kls}">${tanda}${fmtKg(selisih)} kg</b> (${ket})</span>
+        <span class="c-${st.kls}">Err ${fmtId(errPct, 2, 2)}%</span>
+      `;
+    } else {
+      box.className = 'live-diff';
+      box.innerHTML = '';
+    }
+  }
+}
+
+function isiDefaultK1() {
+  document.getElementById('k1').value = '1.000';
+  onInputChange();
+}
+
+function updateAddBtn() {
+  const t2Hidden = document.getElementById('tes2').classList.contains('hidden');
+  const t3Hidden = document.getElementById('tes3').classList.contains('hidden');
+  const btn = document.getElementById('addTestBtn');
+  if (!t2Hidden && !t3Hidden) {
+    btn.classList.add('hidden');
+  } else {
+    btn.classList.remove('hidden');
+    btn.textContent = t2Hidden ? '+ Tambah Pengetesan 2' : '+ Tambah Pengetesan 3';
+  }
+}
+
+function tambahTes() {
+  const t2 = document.getElementById('tes2');
+  const t3 = document.getElementById('tes3');
+  if (t2.classList.contains('hidden')) {
+    t2.classList.remove('hidden');
+    if (!document.getElementById('k2').value) autoIsiKBerikutnya(2);
+  } else if (t3.classList.contains('hidden')) {
+    t3.classList.remove('hidden');
+    if (!document.getElementById('k3').value) autoIsiKBerikutnya(3);
+  }
+  updateAddBtn();
+  onInputChange();
+}
+
+function autoIsiKBerikutnya(targetTes) {
+  const tol = getTol() || 0.5;
+  const prev = targetTes - 1;
+  let kPrev = parseFloat(document.getElementById(`k${prev}`).value);
+  let aPrev = parseFloat(document.getElementById(`a${prev}`).value);
+  let dPrev = parseFloat(document.getElementById(`d${prev}`).value);
+
+  if (!(kPrev > 0 && aPrev > 0 && dPrev > 0) && prev !== 1) {
+    kPrev = parseFloat(document.getElementById('k1').value);
+    aPrev = parseFloat(document.getElementById('a1').value);
+    dPrev = parseFloat(document.getElementById('d1').value);
+  }
+
+  if (kPrev > 0 && aPrev > 0 && dPrev > 0) {
+    const errPrev = Math.abs(aPrev - dPrev) / aPrev * 100;
+    const nextK = errPrev < tol ? kPrev : kPrev * (aPrev / dPrev);
+    document.getElementById(`k${targetTes}`).value = formatCoef3(nextK);
+  } else if (document.getElementById('k1').value) {
+    document.getElementById(`k${targetTes}`).value = document.getElementById('k1').value;
+  }
+}
+
+function hapusTes(n) {
+  ['k', 'a', 'd'].forEach(p => document.getElementById(`${p}${n}`).value = '');
+  document.getElementById(`tes${n}`).classList.add('hidden');
+  updateAddBtn();
+  onInputChange();
+}
+
 function simpanData() {
-  const data = {
-    kLama: document.getElementById('kLama').value,
-    wAktual: document.getElementById('wAktual').value,
-    wDisplay: document.getElementById('wDisplay').value
-  };
-  localStorage.setItem('kalkulatorKoefData', JSON.stringify(data));
+  try {
+    const data = {};
+    FIELDS.forEach(id => data[id] = document.getElementById(id).value);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch (e) {}
 }
 
 function muatData() {
-  const dataTersimpan = localStorage.getItem('kalkulatorKoefData');
-  if (dataTersimpan) {
-    const data = JSON.parse(dataTersimpan);
-    document.getElementById('kLama').value = data.kLama || '';
-    document.getElementById('wAktual').value = data.wAktual || '';
-    document.getElementById('wDisplay').value = data.wDisplay || '';
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    FIELDS.forEach(id => {
+      if (data[id] !== undefined) {
+        if (id === 'tolInput' && data[id] === '') return;
+        document.getElementById(id).value = data[id];
+      }
+    });
+    if (data.k2 || data.a2 || data.d2) document.getElementById('tes2').classList.remove('hidden');
+    if (data.k3 || data.a3 || data.d3) document.getElementById('tes3').classList.remove('hidden');
+    updateAddBtn();
+    updateLivePreview();
+  } catch (e) {
+    try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
   }
 }
 
 window.addEventListener('DOMContentLoaded', muatData);
 
-// === FUNGSI HAPUS (BERSIH TOTAL) ===
 function resetForm() {
-  document.getElementById('kLama').value = '';
-  document.getElementById('wAktual').value = '';
-  document.getElementById('wDisplay').value = '';
-  
-  localStorage.removeItem('kalkulatorKoefData');
-  
+  FIELDS.forEach(id => {
+    document.getElementById(id).value = (id === 'tolInput') ? '0.5' : '';
+  });
+  document.getElementById('tes2').classList.add('hidden');
+  document.getElementById('tes3').classList.add('hidden');
+  updateAddBtn();
+  updateLivePreview();
+  lastReportData = null;
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+
   const el = document.getElementById('result');
   el.classList.remove('show');
   el.innerHTML = '';
-  
-  document.getElementById('kLama').focus();
+  document.getElementById('k1').focus();
+}
+
+function salinK(targetTes, mode) {
+  if (mode === 'awal') {
+    const k1 = document.getElementById('k1').value;
+    if (k1) document.getElementById(`k${targetTes}`).value = k1;
+  } else if (mode === 'hasil') {
+    let srcIdx = targetTes - 1;
+    let kPrev = parseFloat(document.getElementById(`k${srcIdx}`).value);
+    let aPrev = parseFloat(document.getElementById(`a${srcIdx}`).value);
+    let dPrev = parseFloat(document.getElementById(`d${srcIdx}`).value);
+
+    if (!(kPrev > 0 && aPrev > 0 && dPrev > 0) && srcIdx !== 1) {
+      kPrev = parseFloat(document.getElementById('k1').value);
+      aPrev = parseFloat(document.getElementById('a1').value);
+      dPrev = parseFloat(document.getElementById('d1').value);
+    }
+
+    if (kPrev > 0 && aPrev > 0 && dPrev > 0) {
+      document.getElementById(`k${targetTes}`).value = formatCoef3(kPrev * (aPrev / dPrev));
+    }
+  }
+  onInputChange();
+}
+
+function salinNilai(nilai, btn) {
+  const done = () => {
+    const ori = btn.textContent;
+    btn.textContent = 'Tersalin ✓';
+    setTimeout(() => btn.textContent = ori, 1500);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(nilai).then(done).catch(() => {});
+  } else {
+    const tmp = document.createElement('textarea');
+    tmp.value = nilai;
+    document.body.appendChild(tmp);
+    tmp.select();
+    document.execCommand('copy');
+    document.body.removeChild(tmp);
+    done();
+  }
 }
 
 function hitung() {
-  const kLama    = parseFloat(document.getElementById('kLama').value);
-  const wAktual  = parseFloat(document.getElementById('wAktual').value);
-  const wDisplay = parseFloat(document.getElementById('wDisplay').value);
   const el = document.getElementById('result');
+  const tagId = document.getElementById('tagId').value.trim();
+  const tol = getTol();
 
-  if (isNaN(kLama) || isNaN(wAktual) || isNaN(wDisplay) || kLama <= 0 || wAktual <= 0 || wDisplay <= 0) {
+  if (tol === null) {
     el.className = 'result show';
-    el.innerHTML = `<div style="text-align:center;font-size:11px;color:#c99494;padding:8px 0;">Input tidak valid</div>`;
+    el.innerHTML = `<div style="text-align:center;font-size:11px;color:#c99494;padding:8px 0;">Input Toleransi (±%) tidak valid (harus &gt; 0 dan &lt; 50)</div>`;
+    lastReportData = null;
     return;
   }
 
+  const hasilTes = [];
+
+  for (let i = 1; i <= 3; i++) {
+    const blockHidden = document.getElementById(`tes${i}`).classList.contains('hidden');
+    const kRaw = document.getElementById(`k${i}`).value.trim();
+    const aRaw = document.getElementById(`a${i}`).value.trim();
+    const dRaw = document.getElementById(`d${i}`).value.trim();
+
+    if (blockHidden || (!kRaw && !aRaw && !dRaw)) {
+      if (i === 1) {
+        el.className = 'result show';
+        el.innerHTML = `<div style="text-align:center;font-size:11px;color:#c99494;padding:8px 0;">Input Pengetesan 1 belum diisi</div>`;
+        lastReportData = null;
+        return;
+      }
+      continue;
+    }
+
+    const k = parseFloat(kRaw);
+    const a = parseFloat(aRaw);
+    const d = parseFloat(dRaw);
+
+    if (isNaN(k) || isNaN(a) || isNaN(d) || k <= 0 || a <= 0 || d <= 0) {
+      el.className = 'result show';
+      el.innerHTML = `<div style="text-align:center;font-size:11px;color:#c99494;padding:8px 0;">Input Pengetesan ${i} tidak valid</div>`;
+      lastReportData = null;
+      return;
+    }
+
+    const faktor  = a / d;
+    const kBaru   = k * faktor;
+    const selisih = d - a;
+    const errPct  = Math.abs(selisih) / a * 100;
+    const rawLoad = d / k;
+
+    hasilTes.push({
+      no: i, k, a, d, faktor, kBaru, selisih, errPct, rawLoad,
+      status: getStatus(errPct, tol)
+    });
+  }
+
   simpanData();
+  updateLivePreview();
 
-  const faktor    = wAktual / wDisplay;
-  const kBaru     = kLama * faktor;
-  const selisih   = wAktual - wDisplay;
-  const errorAktual   = Math.abs(selisih) / wAktual * 100;
-  const akurasiAktual = Math.max(0, 100 - errorAktual);
+  const isSingle = hasilTes.length === 1;
+  const lastTes  = hasilTes[hasilTes.length - 1];
+  const semuaKSama = hasilTes.every(t => Math.abs(t.k - hasilTes[0].k) < 1e-9);
 
-  const kls = akurasiAktual >= 99.5 ? 'ok' : (akurasiAktual >= 99.0 ? 'warn' : 'err');
-  const isRef = akurasiAktual >= 99.5;
+  const totalWB      = hasilTes.reduce((s, t) => s + t.a, 0);
+  const totalBW      = hasilTes.reduce((s, t) => s + t.d, 0);
+  const totalSelisih = totalBW - totalWB;
+  const totalRaw     = hasilTes.reduce((s, t) => s + t.rawLoad, 0);
+  const kGabungan    = totalWB / totalRaw;
 
-  const labelText  = isRef ? 'Ref Koefisien Baru' : 'Koefisien Baru';
-  const labelClass = isRef ? 'ref' : '';
-  const valueClass = isRef ? 'ref' : '';
+  let labelUtama = '';
+  let nilaiUtama = '';
+  let subRefText = '';
+  let errUtama   = lastTes.errPct;
+  let statusUtama = lastTes.status;
 
-  const fmt = (n, d=2) => n.toLocaleString('id-ID', {minimumFractionDigits: d, maximumFractionDigits: d});
-  const kBaruStr = Number(kBaru.toFixed(4)).toString();
+  if (!isSingle && semuaKSama) {
+    errUtama = Math.abs(totalSelisih) / totalWB * 100;
+    statusUtama = getStatus(errUtama, tol);
+    if (errUtama < tol) {
+      labelUtama = 'Koefisien Dipertahankan';
+      nilaiUtama = formatCoef3(hasilTes[0].k);
+      subRefText = `Ref gabungan: ${formatCoef3(kGabungan)}`;
+    } else {
+      labelUtama = 'Koefisien Baru (Gabungan)';
+      nilaiUtama = formatCoef3(kGabungan);
+      subRefText = `Presisi 4 desimal: ${kGabungan.toFixed(4)}`;
+    }
+  } else {
+    if (lastTes.errPct < tol) {
+      labelUtama = 'Koefisien Final (Tetap)';
+      nilaiUtama = formatCoef3(lastTes.k);
+      subRefText = `Ref hitungan Tes ${lastTes.no}: ${formatCoef3(lastTes.kBaru)} (tidak diubah)`;
+    } else {
+      labelUtama = isSingle ? 'Koefisien Baru' : `Koefisien Baru (Tes ${lastTes.no})`;
+      nilaiUtama = formatCoef3(lastTes.kBaru);
+      subRefText = `Presisi 4 desimal: ${lastTes.kBaru.toFixed(4)}`;
+    }
+  }
+
+  const akurasiAktual = Math.max(0, 100 - errUtama);
+  const isRef = statusUtama.kls === 'ok';
+  const now = new Date();
+  const tolStr = fmtPctClean(tol);
+
+  lastReportData = {
+    tagId,
+    tol,
+    tolStr,
+    now,
+    hasilTes,
+    isSingle,
+    semuaKSama,
+    totalWB,
+    totalBW,
+    totalSelisih,
+    kGabungan,
+    labelUtama,
+    nilaiUtama,
+    subRefText,
+    statusUtama,
+    akurasiAktual
+  };
+
+  const escapeHtml = (str) => str.replace(/[&<>"']/g, m => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[m]));
+
+  const metaRowsHtml = `
+    ${tagId ? `<div class="row"><span>Tag ID</span><span>${escapeHtml(tagId)}</span></div>` : ''}
+    <div class="row"><span>Target Toleransi</span><span>±${tolStr}%</span></div>
+  `;
+
+  let detailHtml = '';
+  if (isSingle) {
+    const t = hasilTes[0];
+    const tanda = t.selisih > 0 ? '+' : '';
+    const ket = t.selisih > 0 ? 'Lebih' : (t.selisih < 0 ? 'Kurang' : 'Pas');
+    detailHtml = `
+      ${metaRowsHtml}
+      <div class="row"><span>Koefisien Lama</span><span>${formatCoef3(t.k)}</span></div>
+      <div class="row"><span>Berat Aktual</span><span>${fmtKg(t.a)} kg</span></div>
+      <div class="row"><span>Berat Display</span><span>${fmtKg(t.d)} kg</span></div>
+      <div class="row"><span>Selisih (Disp − Akt)</span><span class="c-${t.status.kls}">${tanda}${fmtKg(t.selisih)} kg (${ket})</span></div>
+      <div class="row"><span>Deviasi / Error</span><span class="c-${t.status.kls}">${fmtId(t.errPct, 2, 2)}%</span></div>
+      <div class="row"><span>Faktor Koreksi</span><span>${t.faktor.toFixed(4)}</span></div>
+    `;
+  } else {
+    const cardsHtml = hasilTes.map(t => {
+      const cls = `c-${t.status.kls}`;
+      const tanda = t.selisih > 0 ? '+' : '';
+      const ket = t.selisih > 0 ? 'Lebih' : (t.selisih < 0 ? 'Kurang' : 'Pas');
+      const newText = t.errPct < tol
+        ? `<span class="c-ok">Tetap (Ref ${formatCoef3(t.kBaru)})</span>`
+        : `<b>${formatCoef3(t.kBaru)}</b>`;
+
+      return `
+        <div class="test-res-item">
+          <div class="test-res-head">
+            <span>Pengetesan ${t.no}</span>
+            <span class="${cls}">Error ${fmtId(t.errPct, 2, 2)}%</span>
+          </div>
+          <div class="test-res-grid">
+            <div class="test-res-cell">
+              <div class="k">Old Coef</div>
+              <div class="v">${formatCoef3(t.k)}</div>
+            </div>
+            <div class="test-res-cell">
+              <div class="k">Aktual</div>
+              <div class="v">${fmtKg(t.a)} kg</div>
+            </div>
+            <div class="test-res-cell">
+              <div class="k">Display</div>
+              <div class="v">${fmtKg(t.d)} kg</div>
+            </div>
+          </div>
+          <div class="test-res-foot">
+            <span>Selisih: <b class="${cls}">${tanda}${fmtKg(t.selisih)} kg</b> (${ket})</span>
+            <span>New: ${newText}</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    const totalTanda = totalSelisih > 0 ? '+' : '';
+    const totalKet = totalSelisih > 0 ? 'Lebih' : (totalSelisih < 0 ? 'Kurang' : 'Pas');
+
+    detailHtml = `
+      ${metaRowsHtml}
+      ${cardsHtml}
+      <div class="row"><span>Total Aktual (${hasilTes.length} tes)</span><span>${fmtKg(totalWB)} kg</span></div>
+      <div class="row"><span>Total Display (${hasilTes.length} tes)</span><span>${fmtKg(totalBW)} kg</span></div>
+      <div class="row"><span>Total Selisih</span><span>${totalTanda}${fmtKg(totalSelisih)} kg (${totalKet})</span></div>
+      <div class="row"><span>K Gabungan (Terbobot)</span><span>${formatCoef3(kGabungan)}</span></div>
+    `;
+  }
 
   el.className = 'result show';
   el.innerHTML = `
-    <div class="row"><span>Koefisien Lama</span><span>${kLama}</span></div>
-    <div class="row"><span>Berat Aktual</span><span>${fmt(wAktual)} kg</span></div>
-    <div class="row"><span>Berat Display</span><span>${fmt(wDisplay)} kg</span></div>
-    <div class="row"><span>Selisih</span><span>${selisih > 0 ? '+' : ''}${fmt(selisih)} kg</span></div>
-    <div class="row"><span>Error Aktual</span><span>${fmt(errorAktual)}%</span></div>
-    <div class="row"><span>Akurasi Aktual</span><span>${fmt(akurasiAktual)}%</span></div>
-
+    ${detailHtml}
     <div class="divider"></div>
-
-    <div class="row"><span>Faktor Koreksi</span><span>${fmt(faktor, 4)}</span></div>
-
     <div class="big">
-      <div class="label ${labelClass}">${labelText}</div>
-      <div class="value ${kBaruStr.length > 7 ? 'small' : ''} ${valueClass}">${kBaruStr}</div>
+      <div class="label ${isRef ? 'ref' : ''}">${labelUtama}</div>
+      <div class="value ${nilaiUtama.length > 7 ? 'small' : ''} ${isRef ? 'ref' : ''}">${nilaiUtama}</div>
+      <div class="sub-ref">${subRefText}</div>
+      <div><span class="badge ${statusUtama.kls}">${statusUtama.teks}</span></div>
+      <div class="result-actions">
+        <button type="button" class="copy-btn" onclick="salinNilai('${nilaiUtama}', this)">Salin Koefisien</button>
+        <button type="button" class="copy-btn jpg-btn" onclick="downloadJPG()">Download JPG</button>
+      </div>
     </div>
 
     <div class="akurasi-box">
       <div class="akurasi-head">
-        <span class="t">Akurasi</span>
-        <span class="v ${kls}">${fmt(akurasiAktual)}%</span>
+        <span class="t">Akurasi (${isSingle ? 'Tes 1' : (semuaKSama ? 'Gabungan' : 'Tes ' + lastTes.no)})</span>
+        <span class="v ${statusUtama.kls}">${fmtId(akurasiAktual, 2, 2)}%</span>
       </div>
-      <div class="bar"><div class="${kls}" style="width:${akurasiAktual}%"></div></div>
+      <div class="bar"><div id="akurasiBar" class="${statusUtama.kls}" style="width:0%"></div></div>
     </div>
   `;
+
+  requestAnimationFrame(() => {
+    const bar = document.getElementById('akurasiBar');
+    if (bar) {
+      const minScale = Math.max(80, 100 - Math.max(5, getWarnMax(tol) * 3));
+      const visualPct = Math.max(0, Math.min(100, ((akurasiAktual - minScale) / (100 - minScale)) * 100));
+      bar.style.width = `${visualPct}%`;
+    }
+  });
+}
+
+function drawRoundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+function downloadJPG() {
+  if (!lastReportData) return;
+  const r = lastReportData;
+
+  const W = 840;
+  const P = 44;
+  const CW = W - P * 2;
+  const headerH = 176;
+  const topGap = 38;
+  const cardH = 172;
+  const cardGap = 20;
+  const summaryH = 132;
+  const heroH = 246;
+
+  const cardsTotalH = r.hasilTes.length * cardH + (r.hasilTes.length - 1) * cardGap;
+  const afterCardsGap = r.isSingle ? 26 : (cardGap + summaryH + 24);
+  const H = headerH + topGap + cardsTotalH + afterCardsGap + heroH + 72;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  const statusColor = (kls) => kls === 'ok' ? '#2c6e3f' : (kls === 'warn' ? '#9c6b16' : '#b33a3a');
+  const statusBg    = (kls) => kls === 'ok' ? 'rgba(155,176,148,0.18)' : (kls === 'warn' ? 'rgba(212,187,138,0.2)' : 'rgba(201,148,148,0.2)');
+  const statusTextDarkBg = (kls) => kls === 'ok' ? '#b2c7ac' : (kls === 'warn' ? '#d4bb8a' : '#e09a9a');
+
+  // Background body
+  ctx.fillStyle = '#f2f4f7';
+  ctx.fillRect(0, 0, W, H);
+
+  // Header gelap
+  ctx.fillStyle = '#1a1c20';
+  ctx.fillRect(0, 0, W, headerH);
+
+  const d = r.now;
+  const pad2 = (n) => String(n).padStart(2, '0');
+  const tglStr = `${pad2(d.getDate())}/${pad2(d.getMonth() + 1)}/${d.getFullYear()}`;
+
+  ctx.textBaseline = 'alphabetic';
+  ctx.fillStyle = '#eceef1';
+  ctx.font = 'bold 27px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+  ctx.fillText('LAPORAN KOEFISIEN', P, 58);
+
+  ctx.fillStyle = '#b8a888';
+  ctx.font = '600 16px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+  ctx.fillText(`Belt Scale · Toleransi Target ±${r.tolStr}%`, P, 92);
+
+  ctx.fillStyle = '#8b93a1';
+  ctx.font = '500 15px "SF Mono", Consolas, monospace';
+  ctx.fillText(`Tanggal: ${tglStr}`, P, 132);
+
+  // Box Tag ID di kanan header
+  const tagBoxW = 240;
+  const tagBoxH = 84;
+  const tagBoxX = W - P - tagBoxW;
+  const tagBoxY = 46;
+  drawRoundRect(ctx, tagBoxX, tagBoxY, tagBoxW, tagBoxH, 10);
+  ctx.fillStyle = '#242830';
+  ctx.fill();
+  ctx.strokeStyle = '#3a3f47';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  ctx.fillStyle = '#8b93a1';
+  ctx.font = '600 12px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+  ctx.fillText('TAG ID', tagBoxX + 16, tagBoxY + 30);
+
+  ctx.fillStyle = r.tagId ? '#eceef1' : '#6b7280';
+  ctx.font = 'bold 21px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+  ctx.fillText(r.tagId || '-', tagBoxX + 16, tagBoxY + 62, tagBoxW - 32);
+
+  let y = headerH + topGap;
+
+  // Kartu tiap pengetesan
+  r.hasilTes.forEach((t) => {
+    drawRoundRect(ctx, P, y, CW, cardH, 12);
+    ctx.fillStyle = '#ffffff';
+    ctx.fill();
+    ctx.strokeStyle = '#dcdfe4';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    ctx.fillStyle = '#1a1c20';
+    ctx.font = 'bold 19px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+    ctx.fillText(`Pengetesan ${t.no}`, P + 24, y + 40);
+
+    const errLabel = `Error ${fmtId(t.errPct, 2, 2)}%`;
+    ctx.fillStyle = statusColor(t.status.kls);
+    ctx.font = 'bold 18px "SF Mono", Consolas, monospace';
+    const errW = ctx.measureText(errLabel).width;
+    ctx.fillText(errLabel, P + CW - 24 - errW, y + 40);
+
+    ctx.beginPath();
+    ctx.setLineDash([5, 5]);
+    ctx.moveTo(P + 24, y + 58);
+    ctx.lineTo(P + CW - 24, y + 58);
+    ctx.strokeStyle = '#e5e7eb';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    const cols = [
+      { k: 'KOEFISIEN LAMA', v: formatCoef3(t.k), x: P + 24 },
+      { k: 'BERAT AKTUAL', v: `${fmtKg(t.a)} kg`, x: P + 266 },
+      { k: 'BERAT DISPLAY', v: `${fmtKg(t.d)} kg`, x: P + 514 }
+    ];
+    cols.forEach(c => {
+      ctx.fillStyle = '#6b7280';
+      ctx.font = '600 12px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+      ctx.fillText(c.k, c.x, y + 86);
+
+      ctx.fillStyle = '#1a1c20';
+      ctx.font = '600 19px "SF Mono", Consolas, monospace';
+      ctx.fillText(c.v, c.x, y + 114);
+    });
+
+    const tanda = t.selisih > 0 ? '+' : '';
+    const ket = t.selisih > 0 ? 'Lebih' : (t.selisih < 0 ? 'Kurang' : 'Pas');
+    const selText = `Selisih: ${tanda}${fmtKg(t.selisih)} kg (${ket})`;
+    ctx.fillStyle = statusColor(t.status.kls);
+    ctx.font = 'bold 17px "SF Mono", Consolas, monospace';
+    ctx.fillText(selText, P + 24, y + 150);
+
+    const newStr = t.errPct < r.tol
+      ? `Baru: Tetap (Ref ${formatCoef3(t.kBaru)})`
+      : `Koefisien Baru: ${formatCoef3(t.kBaru)}`;
+    ctx.fillStyle = t.errPct < r.tol ? '#2c6e3f' : '#1a1c20';
+    ctx.font = 'bold 17px "SF Mono", Consolas, monospace';
+    const newW = ctx.measureText(newStr).width;
+    ctx.fillText(newStr, P + CW - 24 - newW, y + 150);
+
+    y += cardH + cardGap;
+  });
+
+  if (!r.isSingle) {
+    drawRoundRect(ctx, P, y, CW, summaryH, 12);
+    ctx.fillStyle = '#ffffff';
+    ctx.fill();
+    ctx.strokeStyle = '#dcdfe4';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    const tTanda = r.totalSelisih > 0 ? '+' : '';
+    const tKet = r.totalSelisih > 0 ? 'Lebih' : (r.totalSelisih < 0 ? 'Kurang' : 'Pas');
+    const grid2x2 = [
+      { k: `TOTAL AKTUAL (${r.hasilTes.length} TES)`, v: `${fmtKg(r.totalWB)} kg`, x: P + 24, yOff: 34 },
+      { k: `TOTAL DISPLAY (${r.hasilTes.length} TES)`, v: `${fmtKg(r.totalBW)} kg`, x: P + 395, yOff: 34 },
+      { k: 'TOTAL SELISIH', v: `${tTanda}${fmtKg(r.totalSelisih)} kg (${tKet})`, x: P + 24, yOff: 88 },
+      { k: 'K GABUNGAN (TERBOBOT)', v: formatCoef3(r.kGabungan), x: P + 395, yOff: 88 }
+    ];
+    grid2x2.forEach(item => {
+      ctx.fillStyle = '#6b7280';
+      ctx.font = '600 12px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+      ctx.fillText(item.k, item.x, y + item.yOff);
+
+      ctx.fillStyle = '#1a1c20';
+      ctx.font = 'bold 18px "SF Mono", Consolas, monospace';
+      ctx.fillText(item.v, item.x, y + item.yOff + 24);
+    });
+
+    y += summaryH + 24;
+  } else {
+    y += 6;
+  }
+
+  // Kotak Hasil Final
+  drawRoundRect(ctx, P, y, CW, heroH, 14);
+  ctx.fillStyle = '#1a1c20';
+  ctx.fill();
+
+  ctx.textAlign = 'center';
+  const cx = W / 2;
+
+  ctx.fillStyle = r.statusUtama.kls === 'ok' ? '#9bb094' : '#8b93a1';
+  ctx.font = '600 15px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+  ctx.fillText(r.labelUtama.toUpperCase(), cx, y + 48);
+
+  ctx.fillStyle = r.statusUtama.kls === 'ok' ? '#b2c7ac' : '#ffffff';
+  ctx.font = 'bold 56px "SF Mono", Consolas, monospace';
+  ctx.fillText(r.nilaiUtama, cx, y + 114);
+
+  ctx.fillStyle = '#8b93a1';
+  ctx.font = '500 15px "SF Mono", Consolas, monospace';
+  ctx.fillText(r.subRefText, cx, y + 150);
+
+  const pillText = `${r.statusUtama.teks}  ·  Akurasi ${fmtId(r.akurasiAktual, 2, 2)}%`;
+  ctx.font = 'bold 14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+  const pillW = Math.min(CW - 40, ctx.measureText(pillText).width + 40);
+  drawRoundRect(ctx, cx - pillW / 2, y + 176, pillW, 38, 19);
+  ctx.fillStyle = statusBg(r.statusUtama.kls);
+  ctx.fill();
+
+  ctx.fillStyle = statusTextDarkBg(r.statusUtama.kls);
+  ctx.fillText(pillText, cx, y + 200, pillW - 22);
+
+  // Footer
+  ctx.fillStyle = '#6b7280';
+  ctx.font = '500 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+  ctx.fillText(`Belt Scale · Span Correction · Acuan Toleransi ±${r.tolStr}%`, cx, y + heroH + 42);
+
+  // Export JPG (tanpa jam di nama file)
+  const cleanTag = r.tagId ? r.tagId.replace(/[^a-zA-Z0-9_-]/g, '_') : 'BeltScale';
+  const stamp = `${d.getFullYear()}${pad2(d.getMonth() + 1)}${pad2(d.getDate())}`;
+  const filename = `Coef_${cleanTag}_${stamp}.jpg`;
+
+  const triggerDownload = (url, revoke) => {
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    if (revoke) setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
+
+  if (canvas.toBlob) {
+    canvas.toBlob((blob) => {
+      if (blob) {
+        triggerDownload(URL.createObjectURL(blob), true);
+      } else {
+        triggerDownload(canvas.toDataURL('image/jpeg', 0.95), false);
+      }
+    }, 'image/jpeg', 0.95);
+  } else {
+    triggerDownload(canvas.toDataURL('image/jpeg', 0.95), false);
+  }
 }
 </script>
 
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js')
+      navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' })
         .then((reg) => console.log('Service Worker terdaftar:', reg.scope))
         .catch((err) => console.log('Service Worker gagal:', err));
     });
