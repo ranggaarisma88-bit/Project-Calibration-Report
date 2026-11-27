@@ -1,4 +1,4 @@
-const CACHE_NAME = 'koef-belt-scale-v7';
+const CACHE_NAME = 'koef-belt-scale-v9';
 const ASSETS = [
   './',
   './index.html',

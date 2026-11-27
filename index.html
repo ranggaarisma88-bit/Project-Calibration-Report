@@ -468,6 +468,27 @@
     font-size: 10.5px; color: #767d88; text-align: center;
     margin-top: 22px; line-height: 1.6; letter-spacing: .2px;
   }
+
+  /* ===== Pop-up instal ===== */
+  .install-overlay {
+    z-index: 110;
+    visibility: hidden;
+    transition: opacity .25s ease, visibility .25s;
+  }
+  .install-overlay.show { visibility: visible; }
+  .install-box { max-width: 320px; text-align: center; max-height: 100%; overflow-y: auto; }
+  .install-icon {
+    display: block; width: 76px; height: 76px; padding: 14px;
+    margin: 0 auto 14px; border-radius: 50%;
+    color: #b8a888; background: rgba(184,168,136,.12);
+  }
+  .install-title { font-size: 16px; font-weight: 600; color: #eceef1; margin-bottom: 6px; }
+  .install-desc { font-size: 12px; color: #8b93a1; line-height: 1.6; }
+  .modal-btn.alt {
+    margin-top: 8px; color: #8b93a1;
+    background: transparent; border: 1px solid #4a5058;
+  }
+  .modal-btn.alt:hover { color: #eceef1; background: rgba(255,255,255,.03); }
 </style>
 </head>
 <body>
@@ -539,6 +560,23 @@
     <div class="modal-title" id="modalTitle">Best Practice Lapangan</div>
     <ul class="modal-list" id="modalList"></ul>
     <button type="button" class="modal-btn" onclick="toggleModal()">Mengerti</button>
+  </div>
+</div>
+
+<!-- POP-UP INSTAL APLIKASI -->
+<div class="modal-overlay install-overlay" id="installModal" role="dialog" aria-modal="true" aria-labelledby="installTitle">
+  <div class="modal-box install-box">
+    <svg class="install-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="5" y="2" width="14" height="20" rx="3"/>
+      <path d="M10.5 4.8h3"/>
+      <path d="M12 8v7.5"/>
+      <path d="M8.8 12.5l3.2 3.2 3.2-3.2"/>
+      <path d="M9.5 18.8h5"/>
+    </svg>
+    <h2 class="install-title" id="installTitle">Instal Aplikasi</h2>
+    <p class="install-desc" id="installDesc">Buka langsung dari layar HP dan bisa dipakai offline.</p>
+    <button type="button" class="modal-btn" id="installPrimary">Instal</button>
+    <button type="button" class="modal-btn alt" id="installLater">Nanti Saja</button>
   </div>
 </div>
 
@@ -1363,6 +1401,80 @@ function downloadJPG() {
     triggerDownload(canvas.toDataURL('image/jpeg', 0.95), false);
   }
 }
+</script>
+
+<script>
+// ===== POP-UP INSTAL APLIKASI =====
+(function () {
+  const DISMISS_KEY = 'beltScaleInstallDismissed'; // berlaku selama tab masih terbuka
+
+  // Sudah dibuka sebagai aplikasi terpasang: tidak perlu pop-up
+  if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true) return;
+
+  const ua = navigator.userAgent;
+  // Browser di dalam aplikasi lain (WhatsApp, Instagram, dll.) tidak bisa instal
+  const isAndroidInApp = /Android/i.test(ua) &&
+    /FBAN|FBAV|FB_IAB|Instagram|\bLine\/|MicroMessenger|TikTok|musical_ly|BytedanceWebview|Telegram|; wv\)/i.test(ua);
+
+  const overlay = document.getElementById('installModal');
+  const desc    = document.getElementById('installDesc');
+  const primary = document.getElementById('installPrimary');
+  const later   = document.getElementById('installLater');
+
+  let promptEvent = null;
+  let dismissed = false;
+  try { dismissed = sessionStorage.getItem(DISMISS_KEY) === '1'; } catch (e) {}
+
+  function show() {
+    if (!dismissed) overlay.classList.add('show');
+  }
+  function hide() {
+    overlay.classList.remove('show');
+  }
+  function dismiss() {
+    dismissed = true;
+    try { sessionStorage.setItem(DISMISS_KEY, '1'); } catch (e) {}
+    hide();
+  }
+
+  primary.addEventListener('click', () => {
+    if (isAndroidInApp) {
+      const scheme = location.protocol.replace(':', '');
+      location.href = `intent://${location.host}${location.pathname}${location.search}` +
+        `#Intent;scheme=${scheme};package=com.android.chrome;end`;
+      return;
+    }
+    if (!promptEvent) return;
+    const ev = promptEvent;
+    promptEvent = null; // satu event hanya bisa dipakai sekali
+    dismiss();
+    ev.prompt();        // langsung membuka dialog instal bawaan
+  });
+
+  later.addEventListener('click', dismiss);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) dismiss(); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay.classList.contains('show')) dismiss();
+  });
+
+  // Browser menyatakan aplikasi siap diinstal: tampilkan pop-up
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    promptEvent = e;
+    show();
+  });
+
+  window.addEventListener('appinstalled', () => {
+    promptEvent = null;
+    hide();
+  });
+
+  if (isAndroidInApp) {
+    desc.textContent = 'Instal dilakukan lewat Chrome. Ketuk tombol di bawah.';
+    primary.textContent = 'Buka di Chrome';
+    show();
+  }
+})();
 </script>
 
 <script>
